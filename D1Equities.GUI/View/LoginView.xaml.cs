@@ -37,9 +37,23 @@ namespace D1Equities.GUI.View
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
+
         {
+
+            //set appshutdown flag to true when close button is clicked and pass to App : Applicaiton class
+
+            var app = (App)Application.Current;
+
+            app.isAppShuttingDown = true;
+
+
+
+            //initiate shutdown
+
             Application.Current.Shutdown();
+
         }
+
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
