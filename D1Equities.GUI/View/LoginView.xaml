@@ -205,16 +205,18 @@
 
 
                         <Button x:Name="btnLogin"
-                         BorderThickness="0"
-                         Content="LOGIN"
-                         Foreground="White"
-                         FontSize="10"
-                         FontFamily="Arial"
-                         Cursor="Hand"
-                         Grid.Column="2"
-                         Margin="0,50,0,0"
-                         Opacity="1"
-                         Click="btnLogin_Click">
+                                Command="{Binding LoginCommand}"
+                                BorderThickness="0"
+                                Content="LOGIN"
+                                Foreground="#0d0d0d"
+                                FontSize="12"
+                                FontFamily="Arial"
+                                FontWeight="Bold"
+                                Cursor="Hand"
+                                Grid.Column="2"
+                                Margin="0,30,0,0"
+                                Opacity="1">
+
 
                             <Button.Style>
                                 <Style TargetType="Button">
