@@ -165,6 +165,7 @@
                             Margin="0,25,0,0"/>
 
                         <TextBox x:Name="txtUser"
+                          Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"       
                           FontSize="13"
                           FontWeight="Medium"
                           FontFamily="Arial"
@@ -172,6 +173,7 @@
                           Foreground="White"
                           CaretBrush="LightGray"
                           Height="28"
+                          
                           VerticalContentAlignment="Center"
                           Margin="0,1,0,0"
                           FocusVisualStyle="{x:Null}">
@@ -205,6 +207,7 @@
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
+
                             </TextBox.Style>
 
                         </TextBox>
@@ -265,7 +268,7 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-                        
+
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"
                                     Margin="0,15,0,0">
@@ -286,8 +289,7 @@
                             TextWrapping="Wrap"
                             TextAlignment="Center"
                             Margin="8,0,0,0"/>
-                        </StackPanel>                        
-                       
+                        </StackPanel>
 
                     </StackPanel>
 
@@ -298,4 +300,5 @@
         </Border>
 
     </Border>
+
 </Window>
