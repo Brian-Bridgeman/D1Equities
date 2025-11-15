@@ -33,19 +33,20 @@
         </Border.Background>
 
         <Border CornerRadius="10"
-         BorderThickness="3"
-         Opacity="0.95">
+         BorderThickness="2"
+         Opacity="1">
 
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#1E1E1E" Offset="0.0"/>
+                    <GradientStop Color="#111111" Offset="0.0"/>
+                    <GradientStop Color="#151515" Offset="1.0"/>
                 </LinearGradientBrush>
             </Border.BorderBrush>
 
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#0D0D0D" Offset="0.0"/>
-                    <GradientStop Color="#2C2C2C" Offset="1.0"/>
+                    <GradientStop Color="#0d0d0d" Offset="0.0"/>
+                    <GradientStop Color="#191919" Offset="1.0"/>
                 </LinearGradientBrush>
             </Border.Background>
 
@@ -78,7 +79,7 @@
                                 <Setter Property="Background" Value="#656565"/>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#ADADAD"/>
+                                        <Setter Property="Background" Value="{StaticResource MinimizeColor}"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
