@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:D1Equities.GUI.View"
+        xmlns:viewModel="clr-namespace:D1Equities.GUI.ViewModel" xmlns:customcontrols="clr-namespace:D1Equities.GUI.CustomControls"
         mc:Ignorable="d"
         Title="LoginView" Height="600" Width="400"
         WindowStyle="None"
