@@ -112,7 +112,7 @@
                                 <Setter Property="Background" Value="#656565"/>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#B00000"/>
+                                        <Setter Property="Background" Value="{StaticResource CloseColor}"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -144,7 +144,7 @@
 
 
                     <TextBlock Text="Invest from Day One."
-                            Foreground="LightGray"
+                            Foreground="White"
                             FontSize="12"
                             FontWeight="Medium"
                             FontFamily="Arial"
@@ -172,21 +172,37 @@
                           CaretBrush="LightGray"
                           Height="28"
                           VerticalContentAlignment="Center"
-                          Margin="0,10,0,0"
+                          Margin="0,1,0,0"
                           FocusVisualStyle="{x:Null}">
                             <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderBrush" Value="#656565"/>
-                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="BorderBrush" Value="#0bd851"/>
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter Property="BorderBrush" Value="#0bd851"/>
-                                            <Setter Property="BorderThickness" Value="0,0,0,2"/>
-                                        </Trigger>
-                                    </Style.Triggers>
+
+                                <Style BasedOn="{x:Null}" TargetType="{x:Type TextBox}">
+                                    <Setter Property="BorderThickness" Value="2"/>
+                                    <Setter Property="Padding" Value="1"/>
+                                    <Setter Property="AllowDrop" Value="true"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type TextBox}">
+                                                <Border x:Name="bg" BorderBrush="#656565" BorderThickness="0,0,0,1">
+                                                    <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="bg" Property="BorderBrush" Value="{StaticResource D1Green}"/>
+                                                        <Setter TargetName="bg" Property="BorderThickness" Value="0,0,0,1"/>
+                                                    </Trigger>
+
+                                                    <Trigger Property="IsFocused" Value="True">
+                                                        <Setter TargetName="bg" Property="BorderBrush" Value="{StaticResource D1Green}"/>
+                                                        <Setter TargetName="bg" Property="BorderThickness" Value="0,0,0,1"/>
+                                                    </Trigger>
+
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Style>
                             </TextBox.Style>
 
@@ -221,10 +237,10 @@
 
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#0cd950"/>
+                                    <Setter Property="Background" Value="{StaticResource D1Green}"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#64F795"/>
+                                            <Setter Property="Background" Value="{StaticResource D1GreenHover}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
