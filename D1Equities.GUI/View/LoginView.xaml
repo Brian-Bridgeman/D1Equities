@@ -197,35 +197,11 @@
                             FontWeight="Medium"
                             FontFamily="Arial"
                             Margin="0,25,0,0"/>
-                        <PasswordBox x:Name="txtPass"
-                          FontSize="13"
-                          FontWeight="Medium"
-                          FontFamily="Arial"
-                          Background="Transparent"
-                          Foreground="White"
-                          CaretBrush="LightGray"
-                          Height="28"
-                          VerticalContentAlignment="Center"
-                          Margin="0,5,0,0"
-                          FocusVisualStyle="{x:Null}">
+                        <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            Height="28"
+                                                            Margin="0,5,0,0">
 
-                            <PasswordBox.Style>
-                                <Style TargetType="PasswordBox">
-                                    <Setter Property="BorderBrush" Value="#656565"/>
-                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="BorderBrush" Value="#0bd851"/>
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter Property="BorderBrush" Value="#0bd851"/>
-                                            <Setter Property="BorderThickness" Value="0,0,0,2"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </PasswordBox.Style>
-
-                        </PasswordBox>
+                        </customcontrols:BindablePasswordBox>
 
 
                         <Button x:Name="btnLogin"
