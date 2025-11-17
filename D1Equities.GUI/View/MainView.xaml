@@ -32,6 +32,10 @@
             <local:WalletView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModel:StockViewModel}">
+            <local:StockView/>
+        </DataTemplate>
+
     </Window.Resources>
 
 
