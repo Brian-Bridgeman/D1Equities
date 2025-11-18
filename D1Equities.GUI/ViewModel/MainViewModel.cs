@@ -56,6 +56,7 @@ namespace D1Equities.GUI.ViewModel
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowMarketViewCommand { get; }
         public ICommand ShowWalletViewCommand { get; }
+        public ICommand ShowStockViewCommand {  get; }
 
         public MainViewModel()
         {
@@ -63,6 +64,8 @@ namespace D1Equities.GUI.ViewModel
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowMarketViewCommand = new ViewModelCommand(ExecuteShowMarketCommand);
             ShowWalletViewCommand = new ViewModelCommand(ExecuteShowWalletCommand);
+            ShowStockViewCommand = new ViewModelCommand(ExecuteShowStockCommand);
+
 
             //default view
             ExecuteShowHomeViewCommand(null);
@@ -81,6 +84,12 @@ namespace D1Equities.GUI.ViewModel
             Caption = "Market";
             Icon = IconChar.ChartLine;
 
+        }
+        private void ExecuteShowStockCommand(object obj)
+        {
+            CurrentChildView = new StockViewModel();
+            Caption = "Placeholder";
+            Icon = IconChar.ChartLine;
         }
 
         private void ExecuteShowWalletCommand(object obj)

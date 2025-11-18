@@ -14,7 +14,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <!-- Left half -->
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="400" />
             <!-- Right half -->
         </Grid.ColumnDefinitions>
 
@@ -36,7 +36,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Search bar -->
-                <DockPanel Grid.Row="0" Margin="0,0,0,15">
+                <DockPanel Grid.Row="0" Margin="0,0,0,25">
                     <TextBox x:Name="SearchBox"
                      Width="250"
                      Height="32"
@@ -51,167 +51,193 @@
 
                 <!-- Scrollable list -->
                 <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled">
+                      VerticalScrollBarVisibility="Hidden"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalAlignment="Top"
+                      Height="150">
 
                     <StackPanel x:Name="ItemsPanel" Orientation="Vertical">
                         <!-- Example items (replace with data binding later) -->
-                        <Border Background="#2A2A2A" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <TextBlock Text="Item 1" Foreground="White" FontSize="16"/>
-                        </Border>
+                        
+                        <RadioButton Style="{StaticResource stockButton}" Margin="0,0,0,5"
+                                 Tag="LightGray"
+                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
 
-                        <Border Background="#2A2A2A" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <TextBlock Text="Item 2" Foreground="White" FontSize="16"/>
-                        </Border>
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                <TextBlock Text="A" Style="{StaticResource menuButtonText}" FontSize="12"/>
+                            </StackPanel>
+                        </RadioButton>
 
-                        <Border Background="#2A2A2A" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <TextBlock Text="Item 3" Foreground="White" FontSize="16"/>
-                        </Border>
+                        <RadioButton Style="{StaticResource stockButton}" Margin="0,0,0,5"
+                                 Tag="LightGray"
+                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                <TextBlock Text="B" Style="{StaticResource menuButtonText}" FontSize="12"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource stockButton}" Margin="0,0,0,5"
+                                 Tag="LightGray"
+                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                <TextBlock Text="C" Style="{StaticResource menuButtonText}" FontSize="12"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource stockButton}" Margin="0,0,0,5"
+                                 Tag="LightGray"
+                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                <TextBlock Text="D" Style="{StaticResource menuButtonText}" FontSize="12"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource stockButton}" Margin="0,0,0,5"
+                                 Tag="LightGray"
+                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                <TextBlock Text="E" Style="{StaticResource menuButtonText}" FontSize="12"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource stockButton}" Margin="0,0,0,5"
+                                 Tag="LightGray"
+                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                            RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                <TextBlock Text="F" Style="{StaticResource menuButtonText}" FontSize="12"/>
+                            </StackPanel>
+                        </RadioButton>
+
                     </StackPanel>
 
                 </ScrollViewer>
             </Grid>
         </Border>
 
-        <!-- Right half: split vertically -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <!-- Top right -->
-                <RowDefinition Height="*" />
-                <!-- Bottom right -->
-            </Grid.RowDefinitions>
-
-            <!-- Top right section -->
-            <Border Grid.Row="0"
-                    Background="#191919"
-                    CornerRadius="12"
-                    Margin="10"
-                    Padding="25"
-                    BorderBrush="#333"
-                    BorderThickness="1">
+        <!-- Right half merged section with narrower width -->
+        <Grid Grid.Column="1" Margin="0,10,10,10">
+            <Border Background="#191919"
+            CornerRadius="12"
+            Padding="25"
+            BorderBrush="#333"
+            BorderThickness="1"
+            Width="390">
+                <!-- narrower than the full right half -->
 
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <!-- Stats section -->
                         <RowDefinition Height="*"/>
+                        <!-- Chart section -->
                     </Grid.RowDefinitions>
 
-                    <!-- Main title -->
-                    <TextBlock Text="Total Portfolio Value"
-                   Foreground="{StaticResource D1Green}"
-                   FontSize="22"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,15"/>
+                    <!-- Stats section (top) -->
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                        <TextBlock Text="Total Portfolio Value"
+                           Foreground="{StaticResource D1Green}"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,15"/>
 
-                    <!-- Big number -->
-                    <TextBlock Text="$124,590.23"
-                   Grid.Row="1"
-                   Foreground="White"
-                   FontSize="42"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="$124,590.23"
+                           Foreground="White"
+                           FontSize="42"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
 
-                    <!-- Growth indicator -->
-                    <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Margin="0,10,0,20">
+                        <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Margin="0,10,0,20">
+                            <TextBlock Text="+2.45% Today"
+                               Foreground="{StaticResource D1Green}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="0,0,15,0"/>
+                            <TextBlock Text="+$2,985.33"
+                               Foreground="{StaticResource D1Green}"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+                        </StackPanel>
 
-                        <TextBlock Text="+2.45% Today"
-                       Foreground="{StaticResource D1Green}"
-                       FontSize="18"
-                       FontWeight="SemiBold"
-                       Margin="0,0,15,0"/>
-
-                        <TextBlock Text="+$2,985.33"
-                       Foreground="{StaticResource D1Green}"
-                       FontSize="18"
-                       FontWeight="SemiBold"/>
+                        <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="0,0,0,15"
+                            Width="250">
+                            <TextBlock Text="• All-Time Change: +24.59%"
+                               Foreground="#C8C8C8"
+                               FontSize="16"
+                               Margin="0,5"
+                               HorizontalAlignment="Center"/>
+                            <TextBlock Text="• Total Return (Value): +$24,590.23"
+                               Foreground="#C8C8C8"
+                               FontSize="16"
+                               Margin="0,5"/>
+                            <TextBlock Text="• Last updated: 2 minutes ago"
+                               Foreground="#888"
+                               FontSize="14"
+                               Margin="0,10"/>
+                        </StackPanel>
                     </StackPanel>
 
-                    <!-- Extra info section -->
-                    <StackPanel Grid.Row="3"
-                                Orientation="Vertical"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Top"
-                                Margin="0,15,0,0"
-                                Width="250">
+                    <!-- Chart section (bottom) -->
+                    <Border Grid.Row="1"
+                    Background="#151515"
+                    CornerRadius="10"
+                    Padding="10"
+                    Margin="0,10,0,0"
+                    BorderBrush="#222"
+                    BorderThickness="1">
 
-                        <TextBlock Text="• All-Time Change: +24.59%"
-                                   Foreground="#C8C8C8"
-                                   FontSize="16"
-                                   Margin="0,5"
-                                   HorizontalAlignment="Center"/>
+                        <lvc:CartesianChart LegendLocation="None" Height="200">
+                            <lvc:CartesianChart.DataTooltip>
+                                <lvc:DefaultTooltip Background="Transparent" Foreground="{StaticResource D1Green}"/>
+                            </lvc:CartesianChart.DataTooltip>
 
-                        <TextBlock Text="• Total Return (Value): +$24,590.23"
-                                   Foreground="#C8C8C8"
-                                   FontSize="16"
-                                   Margin="0,5"/>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Foreground="Green" ShowLabels="true" Labels="">
+                                    <lvc:Axis.Separator>
+                                        <lvc:Separator StrokeThickness="0" Step="1" />
+                                    </lvc:Axis.Separator>
+                                </lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
 
-                        <TextBlock Text="• Last updated: 2 minutes ago"
-                                   Foreground="#888"
-                                   FontSize="14"
-                                   Margin="0,10"/>
-                    </StackPanel>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis Foreground="Green" ShowLabels="true" MinValue="0">
+                                    <lvc:Axis.Separator>
+                                        <lvc:Separator StrokeThickness="0"/>
+                                    </lvc:Axis.Separator>
+                                </lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
 
+                            <lvc:CartesianChart.Series>
+                                <lvc:LineSeries StrokeThickness="2" 
+                                        Stroke="{StaticResource D1Green}" 
+                                        PointGeometrySize="10"
+                                        LineSmoothness="0"
+                                        Values="503,350,405,353,65,242,649,349,245,493,439,495,339,110,439,203,209,594,405,439">
+                                    <lvc:LineSeries.Fill>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="#066F29" Offset="0.4"/>
+                                            <GradientStop Color="#191919" Offset="1.2"/>
+                                        </LinearGradientBrush>
+                                    </lvc:LineSeries.Fill>
+                                </lvc:LineSeries>
+                            </lvc:CartesianChart.Series>
+                        </lvc:CartesianChart>
+                    </Border>
                 </Grid>
             </Border>
-
-            <!-- Bottom right section (graph sits here) -->
-            <Border Grid.Row="1" Background="#191919" CornerRadius="10" Margin="10" Padding="15" BorderBrush="#333333" BorderThickness="1">
-                <StackPanel Orientation="Vertical">
-
-                    <!-- Title text -->
-                    <TextBlock Text="Portfolio Growth (USD)"
-                   Foreground="White" 
-                   FontSize="15" 
-                   FontWeight="Medium"
-                   Margin="0,0,0,10"
-                   HorizontalAlignment="Center"/>
-
-                    <!-- Chart fills remaining space -->
-                    <lvc:CartesianChart LegendLocation="None" Height="200">
-                        <lvc:CartesianChart.DataTooltip>
-                            <lvc:DefaultTooltip Background="Transparent" Foreground="{StaticResource D1Green}"/>
-                        </lvc:CartesianChart.DataTooltip>
-
-                        <lvc:CartesianChart.AxisX>
-                            <lvc:Axis Foreground="Green" ShowLabels="true" Labels="">
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator StrokeThickness="0" Step="1" />
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisX>
-
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Foreground="Green" ShowLabels="true" MinValue="0">
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator StrokeThickness="0"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-
-                        <lvc:CartesianChart.Series>
-                            <lvc:LineSeries StrokeThickness="2" 
-                                Stroke="{StaticResource D1Green}" 
-                                PointGeometrySize="10"
-                                LineSmoothness="0"
-                                Values="503,350,405,353,65,242,649,349,245,493,439,495,339,110,439,203,209,594,405,439">
-                                <lvc:LineSeries.Fill>
-                                    <LinearGradientBrush>
-                                        <GradientStop Color="#066F29" Offset="0.4"/>
-                                        <GradientStop Color="#191919" Offset="1.2"/>
-                                    </LinearGradientBrush>
-                                </lvc:LineSeries.Fill>
-                            </lvc:LineSeries>
-                        </lvc:CartesianChart.Series>
-                    </lvc:CartesianChart>
-                </StackPanel>
-            </Border>
         </Grid>
+
     </Grid>
 </UserControl>

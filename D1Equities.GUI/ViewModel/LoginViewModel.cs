@@ -1,7 +1,9 @@
-﻿using System;
+﻿using D1Equities.GUI.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -16,6 +18,8 @@ namespace D1Equities.GUI.ViewModel
         private SecureString _password;
         private string _errorMessage;
         private bool _isViewVisible = true;
+
+        private IUserRepository userRepository;
 
         //Properties
         public string Username
@@ -73,6 +77,7 @@ namespace D1Equities.GUI.ViewModel
         //constructor
         public LoginViewModel()
         {
+            userRepository= new JsonUserRepository();
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             
         }
@@ -82,7 +87,7 @@ namespace D1Equities.GUI.ViewModel
         {
  
             bool ValidData;
-            if(string.IsNullOrWhiteSpace(Username) || Username.Length < 3 || Password == null || Password.Length < 3)
+            if(string.IsNullOrWhiteSpace(Username) || Username.Length < 1 || Password == null || Password.Length < 1)
             {
                 ValidData = false;
             }
@@ -95,7 +100,17 @@ namespace D1Equities.GUI.ViewModel
 
         private void ExecuteLoginCommand(object obj)
         {
-            IsViewVisible = false;
+            var isValidUser = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
+            if (isValidUser)
+            {
+                Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(Username), null);
+                IsViewVisible = false;
+            }
+            else
+            {
+                ErrorMessage = "Invalid username or password";
+            }
+               
         }
         
 
