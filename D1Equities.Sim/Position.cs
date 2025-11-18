@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace D1Equities.Sim
 {
@@ -18,7 +14,6 @@ namespace D1Equities.Sim
         public string Ticker => _ticker;
         public int Shares => _shares;
         public decimal AveragePrice => _averagePrice;
-        public decimal CurrentPrice => _currentPrice;
 
         //Beräkna properties 
         public decimal TotalCost => _shares * _averagePrice;
@@ -33,9 +28,6 @@ namespace D1Equities.Sim
             }
         }
 
-        //Constructor
-        public Position(string ticker, int shares, decimal purchasePrice)
-        {
             _ticker = ticker;
             _shares = shares;
             _averagePrice = purchasePrice;
