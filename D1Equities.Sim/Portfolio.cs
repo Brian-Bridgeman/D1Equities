@@ -1,20 +1,20 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace D1Equities.Sim
 {
     public class Portfolio
     {
         public string? UserId { get; init; }
-        public decimal Balance { get; set; } = 10_000M;
-        public decimal TotalEquity { get; set; }
-        public Dictionary<string, Position> Positions { get; set; } = [];
-        public EquityHistory[] EquityHistory { get; set; } = [];
+        public decimal Balance { get; init; }
+        public Dictionary<string, Position> Positions { get; } = [];
+        public List<EquityHistory> EquityHistory { get; init; } = [];
 
         [JsonIgnore]
         private string? PortfolioPath { get; set; }
 
-        public static Portfolio? Load(string userId)
+        public static Portfolio Load(string userId)
         {
             var portfolioDir = Path.Combine(".", "portfolios");
 
@@ -24,24 +24,36 @@ namespace D1Equities.Sim
             var portfolioFile = Path.Combine(portfolioDir, $"{userId}.json");
 
             if (!File.Exists(portfolioFile))
-                File.Create(portfolioFile);
+            {
+                var newPortfolio = new Portfolio
+                {
+                    UserId = userId,
+                    Balance = 10_000M,
+                    PortfolioPath = portfolioFile,
+                    EquityHistory = [new EquityHistory(DateTime.Now, 10_000M)]
+                };
+
+                File.WriteAllText(portfolioFile, JsonSerializer.Serialize(newPortfolio));
+                return newPortfolio;
+            }
 
             try
             {
-                var portfolio = JsonSerializer.Deserialize<Portfolio>(File.ReadAllText(portfolioFile))
+                var json = File.ReadAllText(portfolioFile);
+
+                var portfolio = JsonSerializer.Deserialize<Portfolio>(json)
                     ?? throw new Exception("Couldn't deserialize portfolio file");
 
                 portfolio.PortfolioPath = portfolioFile;
-
                 return portfolio;
             }
-            catch (JsonException)
+            catch (JsonException e)
             {
-                throw new Exception($"Portfolio file for user '{userId}' is corrupted.");
+                throw new Exception($"Portfolio file for user '{userId}' is corrupted.", e);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                throw new Exception("An unknown error occured", e);
+                throw new Exception("An unknown error occurred while loading the portfolio.", e);
             }
         }
 
