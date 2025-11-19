@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using D1Equities.Sim;
 
 namespace D1Equities.GUI.Model
 {
@@ -15,5 +16,9 @@ namespace D1Equities.GUI.Model
         public string Name { get; set;}
         public string LastName { get; set;}
         public string Email { get; set;}
+        
+        public Portfolio UserPortfolio { get; set;}
+        //add portfolio property
+        // portfolio property = portfolio.Load(Id)
     }
 }
