@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace D1Equities.Sim
 {
-    internal class Position  
+    public class Position  
     {
         //Private fields
         private string _ticker;
