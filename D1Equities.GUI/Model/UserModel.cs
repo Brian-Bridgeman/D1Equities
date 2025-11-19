@@ -17,7 +17,7 @@ namespace D1Equities.GUI.Model
         public string LastName { get; set;}
         public string Email { get; set;}
         
-        public Portfolio UserPortfolio { get; set;}
+        public Portfolio? Portfolio { get; set;}
         //add portfolio property
         // portfolio property = portfolio.Load(Id)
     }

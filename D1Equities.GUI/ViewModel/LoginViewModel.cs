@@ -1,11 +1,8 @@
 ﻿using D1Equities.GUI.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using D1Equities.Sim;
 using System.Security;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace D1Equities.GUI.ViewModel
@@ -104,6 +101,16 @@ namespace D1Equities.GUI.ViewModel
             if (isValidUser)
             {
                 Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(Username), null);
+                var user = userRepository.GetByUsername(Username);
+                user.Portfolio = Portfolio.Load(user.Id);
+
+                if(user.Portfolio == null)
+                {
+                    ErrorMessage = "Couldnt load user portfolio";
+                    return;
+                }
+
+                Application.Current.Properties["User"] = user;
                 IsViewVisible = false;
             }
             else
