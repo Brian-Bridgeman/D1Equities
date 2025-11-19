@@ -8,11 +8,14 @@ namespace D1Equities.Sim
     {
         public string? UserId { get; init; }
         public decimal Balance { get; init; }
+        public decimal TotalEquity => Balance + GetTotalPositionsValue();
         public Dictionary<string, Position> Positions { get; } = [];
         public List<EquityHistory> EquityHistory { get; init; } = [];
 
         [JsonIgnore]
         private string? PortfolioPath { get; set; }
+        public decimal GetTotalPositionsValue() => Positions.Values.Select(p => p.CurentValue).Sum();
+        public decimal GetTotalPortfolioValueChange() => EquityHistory.Count >= 2 ? EquityHistory.Last().Equity - EquityHistory.First().Equity : 0;
 
         public static Portfolio Load(string userId)
         {
@@ -57,9 +60,10 @@ namespace D1Equities.Sim
             }
         }
 
+
         public void Save()
         {
-            File.WriteAllText(PortfolioPath, JsonSerializer.Serialize(this));
+            File.WriteAllText(PortfolioPath!, JsonSerializer.Serialize(this));
         }
 
         public void OpenPosition(string symbol, decimal price, int quantity)
@@ -75,5 +79,6 @@ namespace D1Equities.Sim
 
             //TODO - l's v'rdet av pos och ta bort ur dict och l'gg till v'rde pa balance
         }
+
     }
 }

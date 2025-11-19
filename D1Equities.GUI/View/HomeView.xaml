@@ -53,7 +53,7 @@
                     <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                         <TextBlock Text="$" Foreground="White" FontSize="25"
                        FontWeight="Light" VerticalAlignment="Center"/>
-                        <TextBlock Text="36,291.39" Foreground="White" FontSize="30"
+                        <TextBlock Text="{Binding TotalEquity}" Foreground="White" FontSize="30"
                        FontWeight="Light" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
@@ -76,13 +76,13 @@
                        FontWeight="Light" VerticalAlignment="Center"/>
                         <TextBlock Text="$" Foreground="White" FontSize="25"
                        FontWeight="Light" VerticalAlignment="Center"/>
-                        <TextBlock Text="363.57" Foreground="White" FontSize="30"
+                        <TextBlock Text="{Binding TotalValueChange}" Foreground="White" FontSize="30"
                        FontWeight="Light" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                         <TextBlock Text="+" Foreground="#a1a1a1" FontSize="20"
                        FontWeight="Light" VerticalAlignment="Center"/>
-                        <TextBlock Text="1.63%" Foreground="#a1a1a1" FontSize="20"
+                        <TextBlock Text="{Binding TotalPercentageChange}" Foreground="#a1a1a1" FontSize="20"
                        FontWeight="Light" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>                
@@ -101,7 +101,7 @@
                        FontWeight="Light" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                        <TextBlock Text="3" Foreground="White" FontSize="25"
+                        <TextBlock Text="{Binding TotalStocksOwned}" Foreground="White" FontSize="25"
                        FontWeight="Light" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
