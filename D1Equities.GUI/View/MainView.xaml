@@ -23,13 +23,13 @@
         <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
             <local:HomeView/>
         </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModel:PortfolioViewModel}">
+            <local:PortfolioView/>
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type viewModel:MarketViewModel}">
             <local:MarketView/>
-        </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewModel:WalletViewModel}">
-            <local:WalletView/>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type viewModel:StockViewModel}">
@@ -63,9 +63,9 @@
                     BorderBrush="#111111">
 
                 <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,3">
-                        <GradientStop Color="{StaticResource BackgroundPrimaryColor1}" Offset="0.0"/>
-                        <GradientStop Color="{StaticResource BackgroundPrimaryColor1}" Offset="1.0"/>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#191919" Offset="0.0"/>
+                        <GradientStop Color="#121212" Offset="1.0"/>
                     </LinearGradientBrush>
                 </Border.Background>
 
@@ -74,7 +74,7 @@
                     <StackPanel Orientation="Horizontal"
                                 Height="100"
                                 Margin="37,15,0,40">
-                        <Image Source="/Images/a528cf36-feec-459d-88cf-5a391efd7218.png" Height="120"/> 
+                        <Image Source="/Images/D1 LOGO NEW.png" Height="120"/> 
 
                     </StackPanel>
                     <!--Menu Buttons-->
@@ -87,6 +87,15 @@
                             <TextBlock Text="Home" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
+                    
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="LightGray"
+                                 Command="{Binding ShowPortfolioViewCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="CreditCard" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Portfolio" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="LightGray"
@@ -97,14 +106,6 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="LightGray"
-                                 Command="{Binding ShowWalletViewCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:IconImage Icon="CreditCard" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Wallet" Style="{StaticResource menuButtonText}"/>
-                        </StackPanel>
-                    </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="LightGray"
@@ -128,9 +129,8 @@
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                         <GradientStop Color="#191919" Offset="0.0"/>
-                        <GradientStop Color="#191919" Offset="1.0"/>
+                        <GradientStop Color="#121212" Offset="1.0"/>
                     </LinearGradientBrush>
-
                 </Border.Background>
 
                 <Grid>
