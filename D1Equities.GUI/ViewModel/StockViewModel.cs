@@ -29,7 +29,7 @@ namespace D1Equities.GUI.ViewModel
             StockDetails.Add(new StockDetail { Label = "Dividend Yield", Value = "0.55%" });
             StockDetails.Add(new StockDetail { Label = "Open", Value = "$175.36" });
             StockDetails.Add(new StockDetail { Label = "Low", Value = "173.54" });
-            StockDetails.Add(new StockDetail { Label = "Dividend Yield", Value = "51.2M" });
+            StockDetails.Add(new StockDetail { Label = "Volume", Value = "51.2M" });
 
             // Create PlotModel
             CandlestickModel = new PlotModel
@@ -38,7 +38,7 @@ namespace D1Equities.GUI.ViewModel
                 TitleColor = OxyColors.White,
                 Background = OxyColor.FromAColor(0,OxyColor.FromRgb(0,0,0)),
                 PlotAreaBackground = OxyColor.FromRgb(25, 25, 25),
-                PlotAreaBorderColor = OxyColors.White,
+                PlotAreaBorderColor = OxyColor.FromRgb(41,41,41),
             };
 
             DateTimeAxis timeSPanAxis1 = new DateTimeAxis()
