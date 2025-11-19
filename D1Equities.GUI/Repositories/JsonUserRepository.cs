@@ -33,7 +33,6 @@ namespace D1Equities.GUI.Model
             File.WriteAllText(_path, json);
         }
 
-        // ---- AUTH ----
         public bool AuthenticateUser(NetworkCredential credential)
         {
             var username = credential.UserName;
@@ -45,7 +44,7 @@ namespace D1Equities.GUI.Model
             );
         }
 
-        // ---- CRUD ----
+    
         public void Add(UserModel userModel)
         {
             _users.Add(userModel);
