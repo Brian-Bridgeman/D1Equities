@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace D1Equities.Sim
+﻿namespace D1Equities.Sim
 {
-    internal class Stock
+    public class Stock
     {
+        public string Symbol { get; }
+
+        public event EventHandler<CandleUpdatedEventArgs>? CandleUpdated;
+
+        public void OnCandleUpdated(CandleStick candle) =>
+            CandleUpdated?.Invoke(this, new CandleUpdatedEventArgs(candle));
+
+        public List<CandleStick> PriceHistory { get; set; } = [];
+
+        public CandleStick? CurrentCandle { get; set; } = null;
+
+        public Stock(string symbol)
+        {
+            Symbol = symbol;
+        }
     }
 }
