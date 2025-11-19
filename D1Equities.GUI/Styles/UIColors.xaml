@@ -16,8 +16,8 @@
     <SolidColorBrush x:Key="MaximizeColor" Color="#2EFF4A"/>
     <SolidColorBrush x:Key="UIButtons" Color="#656565"/>
     <SolidColorBrush x:Key="UIButtonsHover" Color="#808080"/>
-    <SolidColorBrush x:Key="D1Green" Color="#0bd851"/>
-    <SolidColorBrush x:Key="D1GreenHover" Color="#64F795"/>
+    <SolidColorBrush x:Key="D1Green" Color="#00895d"/>
+    <SolidColorBrush x:Key="D1GreenHover" Color="#00D18F"/>
 
 
     <!--Text Colors-->
