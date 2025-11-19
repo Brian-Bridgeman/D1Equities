@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace D1Equities.Sim
 {
-    internal class Portfolio
+    public class Portfolio
     {
     }
 }

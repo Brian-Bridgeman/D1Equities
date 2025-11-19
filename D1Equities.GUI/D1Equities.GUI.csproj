@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="Images\a528cf36-feec-459d-88cf-5a391efd7218.png" />
+    <None Remove="Images\D1 LOGO NEW.png" />
     <None Remove="Images\pexels-alesiakozik-6781008.jpg" />
   </ItemGroup>
 
@@ -24,6 +25,7 @@
     <Resource Include="Images\a528cf36-feec-459d-88cf-5a391efd7218.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\D1 LOGO NEW.png" />
     <Resource Include="Images\pexels-alesiakozik-6781008.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -37,6 +39,10 @@
 
   <ItemGroup>
     <Folder Include="bin\Debug\net8.0-windows\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\D1Equities.Sim\D1Equities.Sim.csproj" />
   </ItemGroup>
 
 </Project>
