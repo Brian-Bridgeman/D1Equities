@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace D1Equities.GUI.ViewModel
 {
-    public class WalletViewModel : ViewModelBase
+    public class PortfolioViewModel : ViewModelBase
     {
     }
 }
