@@ -27,6 +27,8 @@ namespace D1Equities.GUI.View
         public StockView()
         {
             InitializeComponent();
+
         }
     }
+
 }

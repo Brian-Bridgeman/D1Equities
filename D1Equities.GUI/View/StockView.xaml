@@ -3,35 +3,95 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:oxy="http://oxyplot.org/wpf"
              xmlns:viewModel="clr-namespace:D1Equities.GUI.ViewModel"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1050">
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:local="clr-namespace:D1Equities.GUI.View"
+             Background="Transparent"
+             MinHeight="500"
+             MinWidth="900">
 
     <UserControl.DataContext>
         <viewModel:StockViewModel/>
     </UserControl.DataContext>
 
-    <Grid Background="#191919">
-        <!-- Centering container -->
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Border Background="#222" CornerRadius="10" Padding="15" MinWidth="950" MinHeight="550">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <!-- title -->
-                        <RowDefinition Height="*"/>
-                        <!-- chart fills remaining space -->
-                    </Grid.RowDefinitions>
+    <!-- Gradient border -->
+    <Border CornerRadius="15" Padding="2">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#191919" Offset="0"/>
+                <GradientStop Color="#121212" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
 
+        <!-- Window drop Shadow -->
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" BlurRadius="20" Opacity="0.3" ShadowDepth="5"/>
+        </Border.Effect>
 
-                    <!-- Candlestick chart -->
-                    <oxy:PlotView Grid.Row="1"
-                                  Model="{Binding CandlestickModel}"
-                                  HorizontalAlignment="Left"
-                                  Width="700"/>
-                </Grid>
-            </Border>
-        </Grid>
-    </Grid>
+        <!-- Content container -->
+        <Border CornerRadius="13" Background="Transparent" ClipToBounds="True">
+            <Grid>
+                <!-- Define columns: Chart on the left, Text on the right -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <!-- Chart takes remaining space -->
+                    <ColumnDefinition Width="200" />
+                    <!-- Right panel fixed width -->
+                </Grid.ColumnDefinitions>
+
+                <!-- GRID ROWS: Top info / Chart -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Top box -->
+                    <RowDefinition Height="*"/>
+                    <!-- Chart fills remaining space -->
+                </Grid.RowDefinitions>
+
+                <!-- Top box -->
+                <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#221E1E1E" CornerRadius="10" Margin="15,15,15,5">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="10" Opacity="0.2" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <StackPanel Orientation="Vertical" Margin="15">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="AAPL" Foreground="White" FontSize="25" FontWeight="Light" VerticalAlignment="Center"/>
+                            <TextBlock Text="Apple Inc." Foreground="Gray" FontSize="17" FontWeight="Light" VerticalAlignment="Center" Margin="10,7,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="$267.30" Foreground="White" FontSize="35" FontWeight="Light"/>
+                            <TextBlock Text=" +0.30 (0.17%)" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Chart -->
+                <oxy:PlotView Grid.Row="1" Grid.Column="0"
+                  Model="{Binding CandlestickModel}"
+                  Margin="15"
+                  Background="Transparent"/>
+
+                <!-- Right Panel-->
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,15,15,15" VerticalAlignment="Top">
+                    <TextBlock Text="Stock Info" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                    <!-- Repeats automatically for each item -->
+                    <ItemsControl ItemsSource="{Binding StockDetails}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Label}" Foreground="Gray" FontSize="14" Grid.Column="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Value}" Foreground="Gray" FontSize="14" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+
+        </Border>
+    </Border>
 </UserControl>
