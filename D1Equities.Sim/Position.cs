@@ -27,13 +27,13 @@ namespace D1Equities.Sim
 
 
         public string Ticker => _ticker;
-        public decimal Price => _currentPrice;
+        public decimal CurrentPrice => _currentPrice;
 
         // Properties med PascalCase
         public decimal EntryPrice => _entryPrice;
         public int Quantity => _shares;
         public decimal Pnl => ProfitLoss;
-        public decimal PercentageChange => EntryPrice == 0m ? 0m : (Price - EntryPrice) / EntryPrice * 100m;
+        public decimal PercentageChange => EntryPrice == 0m ? 0m : (CurrentPrice - EntryPrice) / EntryPrice * 100m;
 
         // Beräknar properties
         public decimal AveragePrice => _averagePrice;
