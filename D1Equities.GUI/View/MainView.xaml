@@ -59,7 +59,7 @@
             <!--Navigation Menu-->
             <Border CornerRadius="10,0,0,10"
                     Grid.Column="0"
-                    BorderThickness="0,0,15,0"
+                    BorderThickness="0"
                     BorderBrush="#111111">
 
                 <Border.Background>
@@ -123,7 +123,7 @@
             <!--Main Content Area-->
             <Border CornerRadius="0,10,10,0"
                     Grid.Column="1"
-                    BorderThickness="15,0,0,0"
+                    BorderThickness="0"
                     BorderBrush="#151515">
 
                 <Border.Background>
