@@ -92,44 +92,76 @@
         <Setter Property="Height" Value="9"/>
     </Style>
 
-    <!--Stock Button-->
+    <!-- Stock Button with gradient -->
     <Style x:Key="stockButton" TargetType="RadioButton">
-        <!--Mormal button style-->
-        <Setter Property="Height" Value="25"/>
-        <Setter Property="Margin" Value="0,-5,0,5"/>
-        <Setter Property="Background" Value="#2a2a2a"/>
+        <!-- Basic properties -->
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Foreground" Value="{StaticResource plainTextWhite}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
+
+        <!-- Background gradient for normal state -->
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#191919" Offset="0"/>
+                    <GradientStop Color="#121212" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border Background="{TemplateBinding Background}"
+                    <Border CornerRadius="10"
                             BorderThickness="5,0,0,0"
-                            CornerRadius="10"
                             BorderBrush="{TemplateBinding BorderBrush}">
-                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#191919" Offset="0"/>
+                                <GradientStop Color="#121212" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <ContentPresenter 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center" 
+            Margin="10,0"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
 
         <Style.Triggers>
-            <!--Mouse Style on hover-->
+            <!-- Hover effect -->
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#141414"/>
                 <Setter Property="Foreground" Value="White"/>
-                <Setter Property="BorderBrush" Value="{StaticResource D1Green}"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#081e19" Offset="0"/>
+                            <GradientStop Color="#0d251f" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
             </Trigger>
 
-            <!--Activated button style-->
+            <!-- Checked effect -->
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="#141414"/>
                 <Setter Property="Foreground" Value="{StaticResource D1Green}"/>
                 <Setter Property="BorderBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#1A1A1A" Offset="0"/>
+                            <GradientStop Color="#141414" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
             </Trigger>
-
         </Style.Triggers>
     </Style>
+
 
 
 </ResourceDictionary>
