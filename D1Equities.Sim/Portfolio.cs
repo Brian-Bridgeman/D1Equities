@@ -5,35 +5,44 @@ namespace D1Equities.Sim
 {
     public class Portfolio
     {
-        public string UserId { get; set; }
+        public string? UserId { get; init; }
         public decimal Balance { get; set; } = 10_000M;
         public decimal TotalEquity { get; set; }
         public Dictionary<string, Position> Positions { get; set; } = [];
         public EquityHistory[] EquityHistory { get; set; } = [];
 
         [JsonIgnore]
-        private string PortfolioPath { get; }
+        private string? PortfolioPath { get; set; }
 
-        public Portfolio(string userId)
+        public static Portfolio? Load(string userId)
         {
-            UserId = userId;
-            PortfolioPath = Path.Combine(".", "portfolios", $"{userId}.json");
-        }
+            var portfolioDir = Path.Combine(".", "portfolios");
 
-        public static Portfolio Load(string userId)
-        {
-            var portfolio = new Portfolio(userId);
-            var portfolioPath = Path.Combine(".", "portfolios", $"{userId}.json");
+            if (!Directory.Exists(portfolioDir))
+                Directory.CreateDirectory(portfolioDir);
 
-            if (string.IsNullOrEmpty(portfolioPath))
+            var portfolioFile = Path.Combine(portfolioDir, $"{userId}.json");
+
+            if (!File.Exists(portfolioFile))
+                File.Create(portfolioFile);
+
+            try
+            {
+                var portfolio = JsonSerializer.Deserialize<Portfolio>(File.ReadAllText(portfolioFile))
+                    ?? throw new Exception("Couldn't deserialize portfolio file");
+
+                portfolio.PortfolioPath = portfolioFile;
+
                 return portfolio;
-
-            portfolio = JsonSerializer.Deserialize<Portfolio>(File.ReadAllText(portfolioPath));
-
-            if (portfolio == null)
-                throw new Exception("Couldnt deserialize portfolio file");
-
-            return portfolio;
+            }
+            catch (JsonException)
+            {
+                throw new Exception($"Portfolio file for user '{userId}' is corrupted.");
+            }
+            catch(Exception e)
+            {
+                throw new Exception("An unknown error occured", e);
+            }
         }
 
         public void Save()
