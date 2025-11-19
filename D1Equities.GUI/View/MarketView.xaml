@@ -8,59 +8,141 @@
              xmlns:viewModel="clr-namespace:D1Equities.GUI.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
 
-    <Border Grid.Column="0"
-                Background="#191919"
-                CornerRadius="10"
-                Margin="10"
-                Padding="20"
-                BorderBrush="#333"
-                BorderThickness="1">
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Main panel takes most space -->
+                <ColumnDefinition Width="250" />
+                <!-- Right panel fixed smaller width -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Main panel (current gradient panel) -->
+            <Border Grid.Column="0"
+            CornerRadius="10"
+            Padding="20"
+            BorderBrush="#333"
+            BorderThickness="1">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#191919" Offset="0"/>
+                        <GradientStop Color="#121212" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <!-- Existing Grid with Search + List goes here -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
                     <!-- Search bar -->
-                    <RowDefinition Height="*"/>
+                    <DockPanel Grid.Row="0" Margin="0,0,0,15">
+                        <TextBox x:Name="SearchBox"
+                     Width="250"
+                     Height="32"
+                     VerticalAlignment="Center"
+                     Padding="10,5"
+                     FontSize="16"
+                     Background="#2A2A2A"
+                     Foreground="White"
+                     BorderBrush="#444"
+                     BorderThickness="1"/>
+                    </DockPanel>
+
                     <!-- Scrollable list -->
-                </Grid.RowDefinitions>
-
-                <!-- Search bar -->
-                <DockPanel Grid.Row="0" Margin="0,0,0,15">
-                    <TextBox x:Name="SearchBox"
-               Width="250"
-               Height="32"
-               VerticalAlignment="Center"
-               Padding="10,5"
-               FontSize="16"
-               Background="#2A2A2A"
-               Foreground="White"
-               BorderBrush="#444"
-               BorderThickness="1"/>
-                </DockPanel>
-
                 <!-- Scrollable list -->
                 <ScrollViewer Grid.Row="1"
-                VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Disabled">
+              VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Disabled">
 
                     <StackPanel x:Name="ItemsPanel" Orientation="Vertical">
-                        <!-- Example items (replace with data binding later) -->
-                        <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="LightGray"
-                                 Command="{Binding DataContext.ShowStockViewCommand,
-                                            RelativeSource={RelativeSource AncestorType=Window}}">
 
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="Home" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="AAPL" Style="{StaticResource menuButtonText}"/>
-                            </StackPanel>
+                        <RadioButton Style="{StaticResource stockButton}"
+                     Tag="LightGray"
+                     Command="{Binding DataContext.ShowStockViewCommand,
+                               RelativeSource={RelativeSource AncestorType=Window}}">
+
+                            <Grid Margin="10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <!-- Left side stretches -->
+                                    <ColumnDefinition Width="Auto"/>
+                                    <!-- Right side fits contents -->
+                                </Grid.ColumnDefinitions>
+
+                                <!-- LEFT SIDE: Ticker -->
+                                <TextBlock Grid.Column="0"
+                           Text="AAPL"
+                           Foreground="White"
+                           FontSize="20"
+                           FontWeight="Medium"
+                           VerticalAlignment="Center"/>
+
+                                <!-- RIGHT SIDE: Price + Percent -->
+                                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="20,0,0,0">
+                                    <!-- small space between left/right -->
+
+                                    <TextBlock Text="$"
+                               Foreground="White"
+                               FontSize="18"
+                               Margin="0,0,2,0"/>
+
+                                    <TextBlock Text="{Binding Price}"
+                               Foreground="White"
+                               FontSize="18"
+                               Margin="0,0,8,0"/>
+
+                                    <TextBlock Text="+"
+                               Foreground="{StaticResource D1Green}"
+                               FontSize="18"
+                               Margin="0,0,2,0"/>
+
+                                    <TextBlock Text="{Binding Percent}"
+                               Foreground="{StaticResource D1Green}"
+                               FontSize="18"
+                               Margin="0,0,2,0"/>
+
+                                    <TextBlock Text="%"
+                               Foreground="{StaticResource D1Green}"
+                               FontSize="18"/>
+                                </StackPanel>
+
+                            </Grid>
+
                         </RadioButton>
+
                     </StackPanel>
-                    
+
                 </ScrollViewer>
+
             </Grid>
-        </Border>
+            </Border>
+
+            <!-- Right panel -->
+            <Border Grid.Column="1"
+            CornerRadius="10"
+            Padding="15"
+            Margin="10,0,0,0"
+            BorderBrush="#333"
+            BorderThickness="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#191919" Offset="0"/>
+                    <GradientStop Color="#121212" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <StackPanel>
+                    <TextBlock Text="Right Panel" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <!-- Add your content here -->
+                </StackPanel>
+            </Border>
+        </Grid>
 
 </UserControl>
