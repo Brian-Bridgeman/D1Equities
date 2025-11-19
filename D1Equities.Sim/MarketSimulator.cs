@@ -14,7 +14,7 @@ namespace D1Equities.Sim
             "APCA_API_SECRET_KEY"
         );
 
-        private readonly int _candleLimit = 500;
+        private readonly int _candleLimit = 1000;
 
         public string ChartTimeFrame { get; set; } = "1Min";
 
@@ -67,9 +67,9 @@ namespace D1Equities.Sim
 
         public async Task SelectStock(string symbol)
         {
-            UnsubscribeCurrentStock();
+            //UnsubscribeCurrentStock();
             SelectedStock = new Stock(symbol) { PriceHistory = await GetStockHistoryAsync(symbol) };
-            await SubscribeStockAsync();
+            //await SubscribeStockAsync();
         }
 
         private async Task<List<CandleStick>> GetStockHistoryAsync(string symbol)
@@ -78,7 +78,7 @@ namespace D1Equities.Sim
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(
-                    $"https://data.alpaca.markets/v2/stocks/bars?symbols={symbol}&timeframe={ChartTimeFrame}&start=2024-01-03T00%3A00%3A00Z&end=2024-01-04T00%3A00%3A00Z&limit={_candleLimit}&adjustment=raw&feed=sip&sort=asc"
+                    $"https://data.alpaca.markets/v2/stocks/bars?symbols={symbol}&timeframe={ChartTimeFrame}&start=2025-11-18T00%3A00%3A00Z&end=2025-11-19T00%3A00%3A00Z&limit={_candleLimit}&adjustment=raw&feed=sip&sort=asc"
                 ),
                 Headers =
                 {
@@ -113,7 +113,7 @@ namespace D1Equities.Sim
             _webSocketClient.Send(unsubscribeMsg);
         }
 
-        private async Task SubscribeStockAsync()
+        private async Task SubscribeStockAsync() 
         {
             if (SelectedStock == null)
                 throw new InvalidOperationException("No stock selected.");

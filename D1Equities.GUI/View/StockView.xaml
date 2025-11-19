@@ -58,7 +58,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="$267.30" Foreground="White" FontSize="35" FontWeight="Light"/>
+                            <TextBlock Text="{Binding CurrentPrice}" Foreground="White" FontSize="35" FontWeight="Light"/>
                             <TextBlock Text=" +0.30 (0.17%)" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="10,0,0,0"/>
                         </StackPanel>
                     </StackPanel>

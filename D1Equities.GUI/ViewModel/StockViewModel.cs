@@ -14,6 +14,18 @@ namespace D1Equities.GUI.ViewModel
     public class StockViewModel : ViewModelBase
     {
 
+        private double _currentPrice;
+
+        public double CurrentPrice
+        {
+            get => _currentPrice;
+            set
+            {
+                _currentPrice = value;
+                OnPropertyChanged(nameof(CurrentPrice));
+            }
+        }
+
         public PlotModel CandlestickModel { get; private set; }
 
         public class StockDetail
@@ -66,8 +78,11 @@ namespace D1Equities.GUI.ViewModel
                 TitleColor = OxyColors.White
             };
             CandlestickModel.Axes.Add(linearAxis1);
+        }
 
-            CandleStickSeries candle = new CandleStickSeries()
+        public async Task InitializeAsync()
+        {
+            CandleStickSeries candleSeries = new CandleStickSeries()
             {
                 Color = OxyColors.Black,
                 IncreasingColor = OxyColor.FromRgb(0, 137, 93),
@@ -81,27 +96,27 @@ namespace D1Equities.GUI.ViewModel
 
             };
 
+            var sim = App.Simulator;
 
-            var random = new Random();
-            DateTime start = DateTime.Now.AddDays(-100); // 100 days of data
-            double lastClose = 100;
+            await sim.SelectStock("AAPL");
 
-            for (int i = 0; i < 100; i++)
+            foreach (var candle in sim.SelectedStock.PriceHistory)
             {
-                double open = lastClose + random.NextDouble() * 4 - 2; 
-                double high = open + random.NextDouble() * 5;
-                double low = open - random.NextDouble() * 5;
-                double close = low + random.NextDouble() * (high - low);
-
-                candle.Items.Add(new HighLowItem(DateTimeAxis.ToDouble(start.AddDays(i)), high, low, open, close));
-                lastClose = close;
+                candleSeries.Items.Add(
+                    new HighLowItem(
+                        DateTimeAxis.ToDouble(candle.DateTime),
+                        (double)candle.High,
+                        (double)candle.Low,
+                        (double)candle.Open,
+                        (double)candle.Close
+                    )
+                );
             }
 
-            CandlestickModel.Series.Add(candle);
-
-            // Zoom out so all data is visible by default
+            CandlestickModel.Series.Add(candleSeries);
             CandlestickModel.ResetAllAxes();
+            CandlestickModel.InvalidatePlot(true);
+            CurrentPrice = candleSeries.Items.Last().Close;
         }
-
     }
 }

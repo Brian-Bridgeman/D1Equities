@@ -1,4 +1,5 @@
 ﻿using D1Equities.GUI.View;
+using D1Equities.Sim;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using dotenv.net;
 
 
 namespace D1Equities.GUI
@@ -16,12 +18,15 @@ namespace D1Equities.GUI
     public partial class App : Application
     {
         //create command to get/set flag
+        public static MarketSimulator Simulator { get; set; }
 
         public bool isAppShuttingDown { get; set; }
 
         protected void ApplicationStart(object sender, StartupEventArgs e)
 
         {
+            DotEnv.Load();
+            Simulator = new MarketSimulator();
             var loginView = new LoginView();
             loginView.Show();
             //declare handler as variable so we can explicitly unsubscribe
