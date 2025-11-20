@@ -1,4 +1,5 @@
-﻿using FontAwesome.Sharp;
+﻿using D1Equities.GUI.View;
+using FontAwesome.Sharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace D1Equities.GUI.ViewModel
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowPortfolioViewCommand { get; }
         public ICommand ShowMarketViewCommand { get; }
-        public ICommand ShowStockViewCommand {  get; }
+        public ICommand ShowStockViewCommand { get; }
 
         public MainViewModel()
         {
@@ -91,12 +92,19 @@ namespace D1Equities.GUI.ViewModel
             Icon = IconChar.ChartLine;
 
         }
-        private void ExecuteShowStockCommand(object obj)
+        private async void ExecuteShowStockCommand(object obj)
         {
-            CurrentChildView = new StockViewModel();
-            Caption = "Stock";
-            Icon = IconChar.ChartLine;
-        }
+            string ticker = obj as string ?? "AAPL";
 
+            var vm = new StockViewModel();
+            await vm.InitializeAsync(ticker);
+
+
+
+            CurrentChildView = vm; // assign the view, not the VM
+            Caption = ticker;
+            Icon = IconChar.ChartLine;
+
+        }
     }
 }
