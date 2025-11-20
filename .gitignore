@@ -422,3 +422,4 @@ D1Equities.GUI/D1Equities.GUI.csproj
 .env
 .DS_Store
 /.idea
+D1Equities.GUI/View/MainView.xaml
