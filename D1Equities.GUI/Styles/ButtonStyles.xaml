@@ -114,15 +114,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Border CornerRadius="10"
-                            BorderThickness="5,0,0,0"
-                            BorderBrush="{TemplateBinding BorderBrush}">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Color="#191919" Offset="0"/>
-                                <GradientStop Color="#121212" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Border.Background>
-
+            BorderThickness="0,0,0,0"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            Background="{TemplateBinding Background}">
                         <ContentPresenter 
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center" 
@@ -153,8 +147,8 @@
                 <Setter Property="Background">
                     <Setter.Value>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#1A1A1A" Offset="0"/>
-                            <GradientStop Color="#141414" Offset="1"/>
+                            <GradientStop Color="#114035" Offset="0"/>
+                            <GradientStop Color="#1E5749" Offset="1"/>
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
