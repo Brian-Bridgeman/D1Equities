@@ -1,4 +1,5 @@
-﻿using System;
+﻿using D1Equities.GUI.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,15 @@ namespace D1Equities.GUI.View
         public MarketView()
         {
             InitializeComponent();
+            Loaded += MarketView_Loaded;
+        }
+
+        private async void MarketView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MarketViewModel vm)
+            {
+                await vm.InitializeAsync();
+            }
         }
     }
 }
