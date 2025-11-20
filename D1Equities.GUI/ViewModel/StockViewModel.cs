@@ -25,6 +25,50 @@ namespace D1Equities.GUI.ViewModel
                 OnPropertyChanged(nameof(CurrentPrice));
             }
         }
+        private double _openPrice;
+        public double OpenPrice
+        {
+            get => _openPrice;
+            set
+            {
+                _openPrice = value;
+                OnPropertyChanged(nameof(OpenPrice));
+            }
+        }
+        private double _priceDifference;
+        public double PriceDifference
+        {
+            get => _priceDifference;
+            set
+            {
+                _priceDifference = value;
+                OnPropertyChanged(nameof(PriceDifference));
+            }
+        }
+        private double _percentChange;
+        public double PercentChange
+        {
+            get => _percentChange;
+            set
+            {
+                _percentChange = value;
+                OnPropertyChanged(nameof(PercentChange));
+            }
+        }
+        private string _ticker;
+        public string Ticker
+        {
+            get => _ticker;
+            set { _ticker = value; OnPropertyChanged(nameof(Ticker)); }
+        }
+
+        private string _companyName;
+        public string CompanyName
+        {
+            get => _companyName;
+            set { _companyName = value; OnPropertyChanged(nameof(CompanyName)); }
+        }
+
 
         public PlotModel CandlestickModel { get; private set; }
 
@@ -43,17 +87,21 @@ namespace D1Equities.GUI.ViewModel
             StockDetails.Add(new StockDetail { Label = "Low", Value = "173.54" });
             StockDetails.Add(new StockDetail { Label = "Volume", Value = "51.2M" });
 
-            // Create PlotModel
+
+        }
+
+        public async Task InitializeAsync(string ticker)
+        {
+            // Create a fresh PlotModel for this stock
             CandlestickModel = new PlotModel
             {
-                Title = "",
                 TitleColor = OxyColors.White,
-                Background = OxyColor.FromAColor(0,OxyColor.FromRgb(0,0,0)),
+                Background = OxyColor.FromAColor(0, OxyColor.FromRgb(0, 0, 0)),
                 PlotAreaBackground = OxyColor.FromRgb(25, 25, 25),
-                PlotAreaBorderColor = OxyColor.FromRgb(41,41,41),
+                PlotAreaBorderColor = OxyColor.FromRgb(41, 41, 41),
             };
 
-            DateTimeAxis timeSPanAxis1 = new DateTimeAxis()
+            var timeAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 MinorIntervalType = DateTimeIntervalType.Auto,
@@ -64,12 +112,11 @@ namespace D1Equities.GUI.ViewModel
                 TextColor = OxyColors.White,
                 TitleColor = OxyColors.White
             };
-            CandlestickModel.Axes.Add(timeSPanAxis1);
+            CandlestickModel.Axes.Add(timeAxis);
 
-            LinearAxis linearAxis1 = new LinearAxis()
+            var linearAxis = new LinearAxis
             {
                 Position = AxisPosition.Right,
-
                 MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
                 MajorGridlineColor = OxyColor.FromRgb(44, 44, 44),
@@ -77,12 +124,10 @@ namespace D1Equities.GUI.ViewModel
                 TextColor = OxyColors.White,
                 TitleColor = OxyColors.White
             };
-            CandlestickModel.Axes.Add(linearAxis1);
-        }
+            CandlestickModel.Axes.Add(linearAxis);
 
-        public async Task InitializeAsync()
-        {
-            CandleStickSeries candleSeries = new CandleStickSeries()
+            // Fill the candlestick series
+            var candleSeries = new CandleStickSeries
             {
                 Color = OxyColors.Black,
                 IncreasingColor = OxyColor.FromRgb(0, 137, 93),
@@ -93,12 +138,11 @@ namespace D1Equities.GUI.ViewModel
                 DataFieldClose = "C",
                 DataFieldOpen = "O",
                 TrackerFormatString = "Date: {2}\nOpen: {5:0.00000}\nHigh: {3:0.00000}\nLow: {4:0.00000}\nClose: {6:0.00000}",
-
             };
 
             var sim = App.Simulator;
-
-            await sim.SelectStock("AAPL");
+            await sim.SelectStock(ticker);
+            Ticker = ticker;
 
             foreach (var candle in sim.SelectedStock.PriceHistory)
             {
@@ -114,9 +158,14 @@ namespace D1Equities.GUI.ViewModel
             }
 
             CandlestickModel.Series.Add(candleSeries);
-            CandlestickModel.ResetAllAxes();
             CandlestickModel.InvalidatePlot(true);
-            CurrentPrice = candleSeries.Items.Last().Close;
+            var currentPrice = candleSeries.Items.Last().Close;
+            var openPrice = candleSeries.Items.First().Open;
+            CurrentPrice = currentPrice;
+            PriceDifference = Math.Round((currentPrice - openPrice),2);
+            PercentChange = Math.Round(((currentPrice - openPrice) / openPrice) * 100, 2);
+
         }
+
     }
 }

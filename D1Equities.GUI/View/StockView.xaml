@@ -9,10 +9,8 @@
              MinHeight="500"
              MinWidth="900">
 
-    <UserControl.DataContext>
-        <viewModel:StockViewModel/>
-    </UserControl.DataContext>
 
+    
     <!-- Gradient border -->
     <Border CornerRadius="15" Padding="2">
         <Border.Background>
@@ -52,17 +50,27 @@
                         <DropShadowEffect Color="#000000" BlurRadius="10" Opacity="0.2" ShadowDepth="2"/>
                     </Border.Effect>
                     <StackPanel Orientation="Vertical" Margin="15">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="AAPL" Foreground="White" FontSize="25" FontWeight="Light" VerticalAlignment="Center"/>
-                            <TextBlock Text="Apple Inc." Foreground="Gray" FontSize="17" FontWeight="Light" VerticalAlignment="Center" Margin="10,7,0,0"/>
-                        </StackPanel>
+                        <!-- Ticker on top-left -->
+                        <TextBlock Text="{Binding Ticker}" Foreground="White" FontSize="25" FontWeight="Light" VerticalAlignment="Top"/>
+                        <!-- Company name below ticker -->
+                        <TextBlock Text="{Binding CompanyName}" Foreground="Gray" FontSize="17" FontWeight="Light" Margin="0,5,0,0"/>
 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding CurrentPrice}" Foreground="White" FontSize="35" FontWeight="Light"/>
-                            <TextBlock Text=" +0.30 (0.17%)" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="10,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,0">
+                            <!-- Dollar sign -->
+                            <TextBlock Text="$" Foreground="White" FontSize="35" FontWeight="Light" VerticalAlignment="Center"/>
+                            <!-- Price -->
+                            <TextBlock Text="{Binding CurrentPrice}" Foreground="White" FontSize="35" FontWeight="Light" VerticalAlignment="Center"/>
+                            <!-- Price Difference -->
+                            <TextBlock Text="{Binding PriceDifference}" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="10,0,0,25" VerticalAlignment="Center"/>
+                            <!-- Percent Change -->
+                            <TextBlock Text="(" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="5,0,0,25" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PercentChange}" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="0,0,0,25" VerticalAlignment="Center"/>
+                            <TextBlock Text="%" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="0,0,0,25" VerticalAlignment="Center"/>
+                            <TextBlock Text=")" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="0,0,0,25" VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
+
 
                 <!-- Chart -->
                 <oxy:PlotView Grid.Row="1" Grid.Column="0"
