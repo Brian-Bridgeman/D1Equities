@@ -58,10 +58,21 @@ namespace D1Equities.GUI.ViewModel
 
         public HomeViewModel()
         {
-            var user = (UserModel)Application.Current.Properties["User"]!;
-            TotalEquity = user.Portfolio!.TotalEquity;
-            TotalValueChange = user.Portfolio.GetTotalPortfolioValueChange();
-            TotalStocksOwned = user.Portfolio.Positions.Count;
+            if (Application.Current.Properties.Contains("User") &&
+                Application.Current.Properties["User"] is UserModel user &&
+                user.Portfolio != null)
+            {
+                TotalEquity = user.Portfolio.TotalEquity;
+                TotalValueChange = user.Portfolio.GetTotalPortfolioValueChange();
+                TotalStocksOwned = user.Portfolio.Positions.Count;
+            }
+            else
+            {
+                // fallback defaults
+                TotalEquity = 0;
+                TotalValueChange = 0;
+                TotalStocksOwned = 0;
+            }
         }
     }
 }
