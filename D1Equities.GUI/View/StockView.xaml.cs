@@ -24,14 +24,7 @@ namespace D1Equities.GUI.View
         public StockView()
         {
             InitializeComponent();
-            Loaded += StockView_Loaded;
-        }
-        private async void StockView_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is StockViewModel vm)
-            {
-                await vm.InitializeAsync();
-            }
+
         }
     }
 
