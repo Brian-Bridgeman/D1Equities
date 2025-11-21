@@ -7,7 +7,7 @@ namespace D1Equities.Sim
     public class Portfolio
     {
         public string? UserId { get; init; }
-        public decimal Balance { get; init; }
+        public decimal Balance { get; private set; }
         public decimal TotalEquity => Balance + GetTotalPositionsValue();
         public Dictionary<string, Position> Positions { get; } = [];
         public List<EquityHistory> EquityHistory { get; init; } = [];
