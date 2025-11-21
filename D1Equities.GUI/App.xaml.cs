@@ -22,11 +22,12 @@ namespace D1Equities.GUI
 
         public bool isAppShuttingDown { get; set; }
 
-        protected void ApplicationStart(object sender, StartupEventArgs e)
+        protected async void ApplicationStart(object sender, StartupEventArgs e)
 
         {
             DotEnv.Load();
             Simulator = new MarketSimulator();
+            await Simulator.InitAsync();
             var loginView = new LoginView();
             loginView.Show();
             //declare handler as variable so we can explicitly unsubscribe
