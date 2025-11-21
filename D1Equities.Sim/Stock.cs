@@ -13,6 +13,14 @@
 
         public CandleStick? CurrentCandle { get; set; } = null;
 
+        public double GetCurrentPrice() => (double)CurrentCandle.Close;
+
+        public double GetTodaysOpeningPrice()
+        {
+            var tradingDay = PriceHistory.Last().DateTime.Date;
+            return (double)PriceHistory.Where(c => c.DateTime.Date == tradingDay).First().Open;
+        }
+
         public Stock(string symbol)
         {
             Symbol = symbol;

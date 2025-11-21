@@ -141,7 +141,7 @@ namespace D1Equities.GUI.ViewModel
             };
 
             var sim = App.Simulator;
-            await sim.SelectStock(ticker);
+            await sim.LoadStock(ticker);
             Ticker = ticker;
 
             foreach (var candle in sim.SelectedStock.PriceHistory)

@@ -121,7 +121,7 @@ namespace D1Equities.Sim
             return client;
         }
 
-        public async Task SelectStock(string symbol)
+        public async Task LoadStock(string symbol)
         {
             var stock = new Stock(symbol) { PriceHistory = await GetStockHistoryAsync(symbol) };
             stock.CurrentCandle = stock.PriceHistory.Last();
