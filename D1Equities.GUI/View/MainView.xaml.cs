@@ -44,6 +44,7 @@ namespace D1Equities.GUI.View
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
+            App.Simulator.Dispose();
             Application.Current.Shutdown();
         }
 

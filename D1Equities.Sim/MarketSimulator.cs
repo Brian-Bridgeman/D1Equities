@@ -4,7 +4,7 @@ using Websocket.Client;
 
 namespace D1Equities.Sim
 {
-    public class MarketSimulator
+    public class MarketSimulator : IDisposable
     {
         private readonly HttpClient _httpClient;
 
@@ -241,6 +241,11 @@ namespace D1Equities.Sim
 
             stock.OnCandleUpdated(candle);
         }
+
+        public void Dispose()
+        {
+            _webSocketClient.Dispose();
+            _httpClient.Dispose();
         }
     }
 }

@@ -47,6 +47,10 @@ namespace D1Equities.GUI
                         loginView.Close();
                     }
                 }
+                else
+                {
+                    Simulator.Dispose();
+                }
             };
 
             loginView.IsVisibleChanged += handler;
