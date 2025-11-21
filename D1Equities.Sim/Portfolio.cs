@@ -7,7 +7,7 @@ namespace D1Equities.Sim
     public class Portfolio
     {
         public string? UserId { get; init; }
-        public decimal Balance { get; init; }
+        public decimal Balance { get; private set; }
         public decimal TotalEquity => Balance + GetTotalPositionsValue();
         public Dictionary<string, Position> Positions { get; } = [];
         public List<EquityHistory> EquityHistory { get; init; } = [];
@@ -69,6 +69,31 @@ namespace D1Equities.Sim
         public void OpenPosition(string symbol, decimal price, int quantity)
         {
             //TODO - skapa Position och l'gg till i Positions eller l
+            if (string.IsNullOrWhiteSpace(symbol)) 
+                throw new ArgumentException("Symbol cannot be empty.", nameof(symbol));
+            if (price <= 0m) 
+                throw new ArgumentException(nameof(price));
+            if (quantity <= 0)
+                throw new ArgumentException(nameof(quantity));
+
+            decimal cost = price * quantity;
+            if (cost > Balance)
+                throw new Exception("Insufficient balance to open position.");
+
+            Balance -= cost;
+
+            if (Positions.TryGetValue(symbol, out var existing))
+            {
+                existing.AddShares(quantity, price);
+            }
+            else
+            {
+                var position = new Position(symbol, quantity, price);
+                Positions[symbol] = position;
+            }
+
+            EquityHistory.Add(new EquityHistory(DateTime.Now, TotalEquity));
+
         }
 
         public void ClosePosition(string symbol)
@@ -78,6 +103,12 @@ namespace D1Equities.Sim
                 throw new Exception($"Cant close position in {symbol} because it doesnt exist");
 
             //TODO - l's v'rdet av pos och ta bort ur dict och l'gg till v'rde pa balance
+            decimal proceeds = pos!.CurentValue;
+
+            Positions.Remove(symbol);
+            Balance += proceeds;
+
+            EquityHistory.Add(new EquityHistory(DateTime.Now, TotalEquity));
         }
 
     }
