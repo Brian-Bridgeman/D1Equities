@@ -40,7 +40,9 @@ namespace D1Equities.GUI.ViewModel
             foreach(var ticker in sim.AvailableSymbols.Take(9))
             {
                 await sim.LoadStock(ticker);
-                var stock = sim.TryGetLoadedStock(ticker);
+                var stock = sim.GetLoadedStock(ticker);
+                stock.CandleUpdated += Stock_CandleUpdated;
+
                 var currentPrice = stock.GetCurrentPrice();
                 var openPrice = stock.GetTodaysOpeningPrice();
                 Stocks.Add(new StockItem
@@ -48,8 +50,18 @@ namespace D1Equities.GUI.ViewModel
                     Ticker = stock.Symbol,
                     Price = currentPrice,
                     OpenPrice = openPrice,
-                    Percent = Math.Round(((currentPrice - openPrice) / openPrice) * 100, 2),
                 });
+            }
+        }
+
+        private void Stock_CandleUpdated(object? sender, Sim.CandleUpdatedEventArgs e)
+        {
+            foreach(var stock in Stocks)
+            {
+                if(stock.Ticker == e.Candle.Symbol)
+                {
+                    stock.Price = (double)e.Candle.Close;
+                }
             }
         }
     }

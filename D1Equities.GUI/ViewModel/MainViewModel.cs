@@ -74,12 +74,14 @@ namespace D1Equities.GUI.ViewModel
 
         private void ExecuteShowHomeViewCommand(object obj)
         {
+            App.Simulator.UnloadAllStocks();
             CurrentChildView = new HomeViewModel();
             Caption = "Home";
             Icon = IconChar.Home;
         }
         private void ExecuteShowPortfolioCommand(object obj)
         {
+            App.Simulator.UnloadAllStocks();
             CurrentChildView = new PortfolioViewModel();
             Caption = "Portfolio";
             Icon = IconChar.CreditCard;
@@ -87,11 +89,14 @@ namespace D1Equities.GUI.ViewModel
 
         private void ExecuteShowMarketCommand(object obj)
         {
+            App.Simulator.UnloadAllStocks();
+
             CurrentChildView = new MarketViewModel();
             Caption = "Market";
             Icon = IconChar.ChartLine;
 
         }
+
         private async void ExecuteShowStockCommand(object obj)
         {
             string ticker = obj as string ?? "AAPL";

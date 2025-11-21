@@ -26,7 +26,7 @@ namespace D1Equities.Sim
 
         private Dictionary<string, Stock> _loadedStocks = [];
 
-        public Stock? TryGetLoadedStock(string symbol) => _loadedStocks.TryGetValue(symbol, out var stock) ? stock : null;
+        public Stock GetLoadedStock(string symbol) => _loadedStocks[symbol];
 
         public MarketSimulator()
         {
@@ -143,6 +143,13 @@ namespace D1Equities.Sim
             _loadedStocks.Remove(symbol);
         }
 
+        public async Task UnloadAllStocks()
+        {
+            foreach(var key in _loadedStocks.Keys)
+            {
+                UnloadStock(key);
+            }
+        }
         private async Task<List<CandleStick>> GetStockHistoryAsync(string symbol)
         {
             var request = new HttpRequestMessage
