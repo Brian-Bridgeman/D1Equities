@@ -103,6 +103,12 @@ namespace D1Equities.Sim
                 throw new Exception($"Cant close position in {symbol} because it doesnt exist");
 
             //TODO - l's v'rdet av pos och ta bort ur dict och l'gg till v'rde pa balance
+            decimal proceeds = pos!.CurentValue;
+
+            Positions.Remove(symbol);
+            Balance += proceeds;
+
+            EquityHistory.Add(new EquityHistory(DateTime.Now, TotalEquity));
         }
 
     }
