@@ -4,9 +4,105 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:D1Equities.GUI.View"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:viewModel="clr-namespace:D1Equities.GUI.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        
+
+    <UserControl.DataContext>
+        <viewModel:MarketViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- TOP PANEL -->
+            <RowDefinition Height="*"/>
+            <!-- MAIN PANEL -->
+        </Grid.RowDefinitions>
+
+        <!-- TOP PANEL (formerly right panel) -->
+        <Border Grid.Row="0"
+                CornerRadius="10"
+                Padding="30"
+                Margin="0,0,0,10"
+                BorderBrush="#333"
+                BorderThickness="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.5">
+                    <GradientStop Color="#191919" Offset="0"/>
+                    <GradientStop Color="#121212" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <StackPanel Orientation="Horizontal"/>
+        </Border>
+
+        <!-- MAIN PANEL -->
+        <Border Grid.Row="1"
+                CornerRadius="10"
+                Padding="20"
+                BorderBrush="#333"
+                BorderThickness="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#191919" Offset="0"/>
+                    <GradientStop Color="#121212" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Scroll list -->
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="ItemsPanel" Orientation="Vertical">
+
+                        <ItemsControl ItemsSource="{Binding Stocks}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <RadioButton Style="{StaticResource stockButton}"
+                                                 Command="{Binding DataContext.ShowStockViewCommand,
+                                                          RelativeSource={RelativeSource AncestorType=Window}}"
+                                                 CommandParameter="{Binding Ticker}">
+                                        <Grid Margin="10,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding Ticker}"
+                                                       Foreground="White"
+                                                       FontSize="20"
+                                                       FontWeight="Medium"
+                                                       VerticalAlignment="Center"/>
+
+                                            <StackPanel Grid.Column="1"
+                                                        Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        Margin="20,0,0,0">
+                                                <TextBlock Text="$" Foreground="White" FontSize="18" Margin="0,0,2,0"/>
+                                                <TextBlock Text="{Binding Price}" Foreground="White" FontSize="18" Margin="0,0,8,0"/>
+                                                <TextBlock Text="{Binding Percent}" Foreground="{StaticResource D1Green}" FontSize="18" Margin="0,0,2,0"/>
+                                                <TextBlock Text="%" Foreground="{StaticResource D1Green}" FontSize="18"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </RadioButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+        </Border>
     </Grid>
+
 </UserControl>
