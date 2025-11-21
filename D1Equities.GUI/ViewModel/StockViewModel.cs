@@ -1,4 +1,5 @@
 ﻿using D1Equities.GUI.View;
+using D1Equities.Sim;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -15,6 +16,7 @@ namespace D1Equities.GUI.ViewModel
     {
 
         private double _currentPrice;
+        private CandleStickSeries _candleSeries;
 
         public double CurrentPrice
         {
@@ -86,8 +88,6 @@ namespace D1Equities.GUI.ViewModel
             StockDetails.Add(new StockDetail { Label = "Open", Value = "$175.36" });
             StockDetails.Add(new StockDetail { Label = "Low", Value = "173.54" });
             StockDetails.Add(new StockDetail { Label = "Volume", Value = "51.2M" });
-
-
         }
 
         public async Task InitializeAsync(string ticker)
@@ -137,14 +137,19 @@ namespace D1Equities.GUI.ViewModel
                 DataFieldLow = "L",
                 DataFieldClose = "C",
                 DataFieldOpen = "O",
+                CandleWidth = 0.0005,
                 TrackerFormatString = "Date: {2}\nOpen: {5:0.00000}\nHigh: {3:0.00000}\nLow: {4:0.00000}\nClose: {6:0.00000}",
             };
 
             var sim = App.Simulator;
-            await sim.LoadStock(ticker);
             Ticker = ticker;
 
-            foreach (var candle in sim.SelectedStock.PriceHistory)
+            if (!sim.IsStockLoaded(ticker))
+                await sim.LoadStock(ticker);
+
+            var stock = sim.GetLoadedStock(ticker);
+
+            foreach (var candle in stock.PriceHistory)
             {
                 candleSeries.Items.Add(
                     new HighLowItem(
@@ -157,6 +162,11 @@ namespace D1Equities.GUI.ViewModel
                 );
             }
 
+            _candleSeries = candleSeries;
+
+            stock.CandleUpdated += Stock_CandleUpdated;
+            stock.NewCandle += Stock_NewCandle;
+
             CandlestickModel.Series.Add(candleSeries);
             CandlestickModel.InvalidatePlot(true);
             var currentPrice = candleSeries.Items.Last().Close;
@@ -164,8 +174,33 @@ namespace D1Equities.GUI.ViewModel
             CurrentPrice = currentPrice;
             PriceDifference = Math.Round((currentPrice - openPrice),2);
             PercentChange = Math.Round(((currentPrice - openPrice) / openPrice) * 100, 2);
-
         }
 
+        private void Stock_NewCandle(object? sender, NewCandleEventArgs e)
+        {
+            var item = new HighLowItem(
+                DateTimeAxis.ToDouble(e.Candle.DateTime),
+                (double)e.Candle.High,
+                (double)e.Candle.Low,
+                (double)e.Candle.Open,
+                (double)e.Candle.Close);
+
+            _candleSeries.Items.Add(item);
+            CandlestickModel.InvalidatePlot(false);
+        }
+
+        private void Stock_CandleUpdated(object? sender, CandleUpdatedEventArgs e)
+        {
+            int idx = _candleSeries.Items.Count - 1;
+            var last = _candleSeries.Items[idx];
+
+            last.Open = (double)e.Candle.Open;
+            last.Close = (double)e.Candle.Close;
+            last.High = (double)e.Candle.High;
+            last.Low = (double)e.Candle.Low;
+
+            _candleSeries.Items[idx] = last;
+            CandlestickModel.InvalidatePlot(false);
+        }
     }
 }

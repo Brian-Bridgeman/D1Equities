@@ -5,9 +5,12 @@
         public string Symbol { get; }
 
         public event EventHandler<CandleUpdatedEventArgs>? CandleUpdated;
+        public event EventHandler<NewCandleEventArgs>? NewCandle;
 
         public void OnCandleUpdated(CandleStick candle) =>
             CandleUpdated?.Invoke(this, new CandleUpdatedEventArgs(candle));
+
+        public void OnNewCandle(CandleStick candle) => NewCandle?.Invoke(this, new NewCandleEventArgs(candle));
 
         public List<CandleStick> PriceHistory { get; set; } = [];
 

@@ -150,28 +150,42 @@ namespace D1Equities.Sim
                 UnloadStock(key);
             }
         }
+
+        public bool IsStockLoaded(string symbol) => _loadedStocks.ContainsKey(symbol);
+
         private async Task<List<CandleStick>> GetStockHistoryAsync(string symbol)
         {
-            var request = new HttpRequestMessage
+            var dates = Enumerable
+                .Range(0, 5)   
+                .Select(i => DateTime.UtcNow.AddDays(-i).AddMinutes(-15).AddSeconds(-15)) // Free api key = 15 minute delayed data AND ACTUALLY 15 SECONDS < ALPACA FYCJKHG LIAAARS
+                .Select(d => d.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"))
+                .ToArray();
+
+            for(int i = 1; i < dates.Length; i++)
             {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(
-                    $"https://data.alpaca.markets/v2/stocks/bars?symbols={symbol}&timeframe={ChartTimeFrame}&start=2025-11-18T00%3A00%3A00Z&end=2025-11-19T00%3A00%3A00Z&limit={_candleLimit}&adjustment=raw&feed=sip&sort=asc"
-                ),
-                Headers =
+                var request = new HttpRequestMessage
                 {
-                    { "accept", "application/json" },
-                    { "APCA-API-KEY-ID", _apiKeyId },
-                    { "APCA-API-SECRET-KEY", _apiKeySecret },
-                },
-            };
-            using var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri(
+                        $"https://data.alpaca.markets/v2/stocks/bars?symbols={symbol}&timeframe={ChartTimeFrame}&start={dates[i]}&end={dates[i-1]}&limit={_candleLimit}&adjustment=raw&feed=sip&sort=asc"
+                    ),
+                    Headers =
+                    {
+                        { "accept", "application/json" },
+                        { "APCA-API-KEY-ID", _apiKeyId },
+                        { "APCA-API-SECRET-KEY", _apiKeySecret },
+                    },
+                };
+                using var response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
 
-            var historicalBarsReponse =
-                await response.Content.ReadFromJsonAsync<HistoricalBarsResponse>();
+                var historicalBarsReponse =
+                    await response.Content.ReadFromJsonAsync<HistoricalBarsResponse>();
 
-            return historicalBarsReponse?.Bars[symbol] ?? [];
+                return historicalBarsReponse?.Bars[symbol] ?? [];
+            }
+
+            return [];
         }
 
         private void UnsubscribeStock(string symbol)
@@ -213,12 +227,11 @@ namespace D1Equities.Sim
                 switch (item.GetProperty("T").GetString())
                 {
                     case "t":
-                        var trade = JsonSerializer.Deserialize<Trade>(json);
+                        var trade = JsonSerializer.Deserialize<Trade>(item);
                         HandleTradeMessage(trade);
                         break;
-
                     case "b":
-                        var candleStick = JsonSerializer.Deserialize<CandleStick>(json);
+                        var candleStick = JsonSerializer.Deserialize<CandleStick>(item);
                         HandleBarMessage(candleStick);
                         break;
                 }
@@ -232,7 +245,7 @@ namespace D1Equities.Sim
 
             stock.PriceHistory.Add(stock.CurrentCandle);
             stock.CurrentCandle = candleStick;
-            stock.OnCandleUpdated(candleStick);
+            stock.OnNewCandle(candleStick);
         }
 
         private void HandleTradeMessage(Trade? trade)
