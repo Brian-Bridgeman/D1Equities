@@ -11,6 +11,9 @@ namespace D1Equities.Sim
 
     public class CandleStick
     {
+        [JsonPropertyName("S")]
+        public string Symbol { get; set; } = "";
+
         [JsonPropertyName("t")]
         public DateTime DateTime { get; set; }
 
