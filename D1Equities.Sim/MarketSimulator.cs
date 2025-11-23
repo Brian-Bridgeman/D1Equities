@@ -177,10 +177,24 @@ namespace D1Equities.Sim
                     },
                 };
                 using var response = await _httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
+                try 
+                { 
+                    
+                    response.EnsureSuccessStatusCode();
+                }
+                catch
+                {
+                    if (i == dates.Length - 1)
+                        throw new HttpRequestException("Couldnt get historical data");
+
+                    continue;
+                }
 
                 var historicalBarsReponse =
                     await response.Content.ReadFromJsonAsync<HistoricalBarsResponse>();
+
+                if (historicalBarsReponse != null && historicalBarsReponse.Bars.Count == 0)
+                    continue;
 
                 return historicalBarsReponse?.Bars[symbol] ?? [];
             }
