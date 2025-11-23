@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace D1Equities.Sim
@@ -15,15 +16,58 @@ namespace D1Equities.Sim
         private decimal _currentPrice;
 
         //Properties med PascalCase
-        public string Ticker => _ticker;
-        public int Shares => _shares;
-        public decimal AveragePrice => _averageEntryPrice;
-        public decimal CurrentPrice => _currentPrice;
+        public string Ticker { 
+            get
+            {
+                return _ticker;
+            }
+            set
+            {
+                _ticker = value;
+            }
+        }
+        public int Shares
+        {
+            get
+            {
+                return _shares;
+            }
+            set
+            {
+                _shares = value;
+            }
+        }
+        public decimal AveragePrice
+        {
+            get
+            {
+                return _averageEntryPrice;
+            }
+            set
+            {
+                _averageEntryPrice = value;
+            }
+        }
+        public decimal CurrentPrice
+        {
+            get
+            {
+                return _currentPrice;
+            }
+            set
+            {
+                _currentPrice = value;
+            }
+        }
 
         //Beräkna properties 
+        [JsonIgnore]
         public decimal TotalCost => _shares * _averageEntryPrice;
+        [JsonIgnore]
         public decimal CurentValue => _shares * _currentPrice;
+        [JsonIgnore]
         public decimal ProfitLoss => CurentValue - TotalCost;
+        [JsonIgnore]
         public decimal ProfitLossPercent 
         {
             get
@@ -32,7 +76,7 @@ namespace D1Equities.Sim
                 return ProfitLoss / TotalCost * 100;
             }
         }
-
+        public Position() { }
         //Constructor
         public Position(string ticker, int shares, decimal purchasePrice)
         {
@@ -57,9 +101,6 @@ namespace D1Equities.Sim
                 throw new ArgumentException("Kan inte sälja fler aktier än du äger.");
             _shares -= quantity;
         }
-        public string GetPositionSummary()//Sammanfattning av position
-        {
-            return $"Ticker: {_ticker}, Shares: {_shares}, Avg Price: {_averageEntryPrice:C}, Current Price: {_currentPrice:C}, P/L: {ProfitLoss:C} ({ProfitLossPercent:F2}%)";
-        }
+        
     }
 }

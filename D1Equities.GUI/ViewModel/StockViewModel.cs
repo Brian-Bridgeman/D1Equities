@@ -1,4 +1,5 @@
-﻿using D1Equities.GUI.View;
+﻿using D1Equities.GUI.Model;
+using D1Equities.GUI.View;
 using D1Equities.Sim;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -210,35 +211,66 @@ namespace D1Equities.GUI.ViewModel
         }
         private void OpenTradeDialog(bool isBuy)
         {
-            TradeDialogViewModel vm = null!; // placeholder
+            TradeDialog? dialog = null;
+            TradeDialogViewModel? vm = null;
 
-            vm = new TradeDialogViewModel(result =>
+            vm = new TradeDialogViewModel(isBuy,result =>
             {
                 if (result)
                 {
-                    ExecuteTrade(isBuy, vm.ShareAmount, vm.CurrentPrice);
+                    ExecuteTrade(isBuy, vm!.ShareAmount.GetValueOrDefault(), vm!.CurrentPrice);
                 }
+
+                dialog?.Close();
             });
 
-            vm.CurrentPrice = this.CurrentPrice;
-            vm.Title = isBuy ? "Buy Shares" : "Sell Shares";
+            var user = Application.Current.Properties["User"] as UserModel;
 
-            var dialog = new TradeDialog { DataContext = vm };
+            vm.CurrentPrice = this.CurrentPrice;
+            vm.Balance = user.Portfolio.Balance;      
+            vm.Title = isBuy ? "Buy Shares" : "Sell Shares";
+            int owned = user?.Portfolio.Positions.TryGetValue(Ticker, out var pos) == true ? pos.Shares : 0;
+            vm.UpdateSharesOwned(owned);
+
+            dialog = new TradeDialog { DataContext = vm };
             dialog.ShowDialog();
         }
+
+
+
 
         private void ExecuteTrade(bool isBuy, int amount, decimal price)
         {
             if (amount <= 0) return;
 
+            var user = Application.Current.Properties["User"] as UserModel;
+
+
+
             if (isBuy)
             {
-                PortfolioService.BuyStock(Ticker, amount, price);
+                try
+                {
+                    user.Portfolio.OpenPosition(Ticker, price, amount);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Buy Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
-                PortfolioService.SellStock(Ticker, amount, price);
+                try
+                {
+                    user.Portfolio.ClosePosition(Ticker);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Sell Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+
+            user.Portfolio.Save(); // persist portfolio changes
         }
     }
 }
