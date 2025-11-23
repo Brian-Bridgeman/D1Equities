@@ -6,11 +6,11 @@ namespace D1Equities.Sim
 {
     public class Portfolio
     {
-        public string? UserId { get; init; }
-        public decimal Balance { get; private set; }
+        public string? UserId { get; set; }
+        public decimal Balance { get; set; }
         public decimal TotalEquity => Balance + GetTotalPositionsValue();
-        public Dictionary<string, Position> Positions { get; } = [];
-        public List<EquityHistory> EquityHistory { get; init; } = [];
+        public Dictionary<string, Position> Positions { get; set; } = [];
+        public List<EquityHistory> EquityHistory { get; set; } = [];
 
         [JsonIgnore]
         private string? PortfolioPath { get; set; }
