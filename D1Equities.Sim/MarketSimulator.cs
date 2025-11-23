@@ -27,6 +27,8 @@ namespace D1Equities.Sim
         private Dictionary<string, Stock> _loadedStocks = [];
 
         public Stock GetLoadedStock(string symbol) => _loadedStocks[symbol];
+        
+        public string[] GetAllLoadedSymbols() => _loadedStocks.Keys.ToArray();
 
         public MarketSimulator()
         {

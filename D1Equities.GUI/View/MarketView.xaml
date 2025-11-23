@@ -41,60 +41,51 @@
                     </Grid.RowDefinitions>
 
                     <!-- Search bar -->
-                    <DockPanel Grid.Row="0" Margin="0,0,0,15">
-                        <TextBox x:Name="SearchBox"
-                     Width="250"
-                     Height="32"
-                     VerticalAlignment="Center"
-                     Padding="10,5"
-                     FontSize="16"
-                     Background="#2A2A2A"
-                     Foreground="White"
-                     BorderBrush="#444"
-                     BorderThickness="1"/>
-                    </DockPanel>
 
-                    <!-- Scrollable list -->
-                <!-- Scrollable list -->
+                <DockPanel Grid.Row="0" Margin="0,0,0,15">
+                    <TextBox Width="250"
+             Height="32"
+             VerticalAlignment="Center"
+             Padding="10,5"
+             FontSize="16"
+             Background="#2A2A2A"
+             Foreground="White"
+             BorderBrush="#444"
+             BorderThickness="1"
+             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+
                 <ScrollViewer Grid.Row="1"
               VerticalScrollBarVisibility="Auto"
               HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding Stocks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- your template unchanged -->
+                                <RadioButton Style="{StaticResource stockButton}"
+                             Command="{Binding DataContext.ShowStockViewCommand,
+                                       RelativeSource={RelativeSource AncestorType=Window}}"
+                             CommandParameter="{Binding Ticker}">
+                                    <Grid Margin="10,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                    <StackPanel x:Name="ItemsPanel" Orientation="Vertical">
+                                        <TextBlock Grid.Column="0" Text="{Binding Ticker}" 
+                                   Foreground="White" FontSize="20" FontWeight="Medium"/>
 
-                        <ItemsControl ItemsSource="{Binding Stocks}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton Style="{StaticResource stockButton}"
-                                                 Command="{Binding DataContext.ShowStockViewCommand,
-                                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                                                 CommandParameter="{Binding Ticker}">
-                                                    
-                                        <Grid Margin="10,0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Grid.Column="0" Text="{Binding Ticker}" 
-                                                       Foreground="White" FontSize="20" FontWeight="Medium" VerticalAlignment="Center"/>
-
-                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
-                                                <TextBlock Text="$" Foreground="White" FontSize="18" Margin="0,0,2,0"/>
-                                                <TextBlock Text="{Binding Price}" Foreground="White" FontSize="18" Margin="0,0,8,0"/>
-                                                <TextBlock Text="{Binding Percent}" Foreground="{StaticResource D1Green}" FontSize="18" Margin="0,0,2,0"/>
-                                                <TextBlock Text="%" Foreground="{StaticResource D1Green}" FontSize="18"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </RadioButton>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-
-
-                    </StackPanel>
-
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0,0,0">
+                                            <TextBlock Text="$" Foreground="White" FontSize="18"/>
+                                            <TextBlock Text="{Binding Price}" Foreground="White" FontSize="18" Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding Percent}" Foreground="{StaticResource D1Green}" FontSize="18"/>
+                                            <TextBlock Text="%" Foreground="{StaticResource D1Green}" FontSize="18"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
 
             </Grid>
