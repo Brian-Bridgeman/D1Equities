@@ -85,8 +85,8 @@ namespace D1Equities.GUI.ViewModel
         public ObservableCollection<StockDetail> StockDetails { get; } = new ObservableCollection<StockDetail>();
         public StockViewModel()
         {
-            BuyCommand = new RelayCommand(_ => OpenTradeDialog(true));
-            SellCommand = new RelayCommand(_ => OpenTradeDialog(false));
+            BuyCommand = new ViewModelCommand(_ => OpenTradeDialog(true));
+            SellCommand = new ViewModelCommand (_ => OpenTradeDialog(false));
 
             StockDetails.Add(new StockDetail { Label = "Market Cap", Value = "2.5T" });
             StockDetails.Add(new StockDetail { Label = "P/E Ratio", Value = "28.7" });
