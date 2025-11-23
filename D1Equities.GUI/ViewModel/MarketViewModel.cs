@@ -93,7 +93,7 @@ namespace D1Equities.GUI.ViewModel
 
         public async Task FilterResults(int version)
         {
-            if (string.IsNullOrWhiteSpace(_searchText))
+            if (_searchText.Length > 0 && _searchText.All(char.IsWhiteSpace))
                 return;
 
             var loadedSymbols = App.Simulator.GetAllLoadedSymbols();
