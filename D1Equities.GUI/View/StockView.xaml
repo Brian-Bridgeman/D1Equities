@@ -109,19 +109,39 @@
                                 BorderBrush="#555" BorderThickness="1">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" 
-                                            BorderThickness="{TemplateBinding BorderThickness}" 
+                                    <Border x:Name="Root"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
                                             CornerRadius="5">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                                 <GradientStop Color="#081e19" Offset="0"/>
-                                                <GradientStop Color="#0d251f" Offset="1"/>
+                                                <GradientStop Color="#00895d" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
+
                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <!-- Hover -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Root" Property="Opacity" Value="0.85"/>
+                                        </Trigger>
+
+                                        <!-- Pressed -->
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="Root" Property="Opacity" Value="0.7"/>
+                                        </Trigger>
+
+                                        <!-- Disabled -->
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="Root" Property="Opacity" Value="0.4"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Button.Template>
+
                         </Button>
 
                         <!-- Sell Button -->
@@ -133,19 +153,39 @@
                                 BorderBrush="#555" BorderThickness="1">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" 
-                                            BorderThickness="{TemplateBinding BorderThickness}" 
+                                    <Border x:Name="Root"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
                                             CornerRadius="5">
                                         <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                                 <GradientStop Color="#191919" Offset="0"/>
                                                 <GradientStop Color="#121212" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
+
                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <!-- Hover -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Root" Property="Opacity" Value="0.85"/>
+                                        </Trigger>
+
+                                        <!-- Pressed -->
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="Root" Property="Opacity" Value="0.7"/>
+                                        </Trigger>
+
+                                        <!-- Disabled -->
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="Root" Property="Opacity" Value="0.4"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Button.Template>
+
                         </Button>
                     </StackPanel>
 
