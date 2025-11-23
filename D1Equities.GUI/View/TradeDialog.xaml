@@ -5,10 +5,10 @@
         AllowsTransparency="True"
         Background="Transparent"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight">
 
-    <!-- Outer border (gradient, rounded corners, shadow) -->
+    <!-- Outer border (gradient + shadow) -->
     <Border CornerRadius="15" Padding="2">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -16,23 +16,22 @@
                 <GradientStop Color="#121212" Offset="1"/>
             </LinearGradientBrush>
         </Border.Background>
-
         <Border.Effect>
             <DropShadowEffect Color="#000000" BlurRadius="20" Opacity="0.3" ShadowDepth="5"/>
         </Border.Effect>
 
-        <!-- Actual content container -->
+        <!-- Content container -->
         <Border CornerRadius="13" Background="#181818" ClipToBounds="True">
-
             <Grid Margin="20">
 
-                <!-- Title bar substitute (drag window) -->
+                <!-- Title bar (draggable) -->
                 <Border Background="#221E1E1E"
                         CornerRadius="8"
                         Padding="10"
                         Margin="0,0,0,15"
                         MouseLeftButtonDown="WindowDrag">
                     <TextBlock Text="{Binding Title}"
+                               HorizontalAlignment="Center"
                                Foreground="White"
                                FontSize="20"
                                FontWeight="Light"/>
@@ -40,70 +39,150 @@
 
                 <StackPanel Margin="0,60,0,0">
 
-                    <TextBlock Text="{Binding PriceLabel}"
+                    <!-- Price display -->
+                    <!-- Shares Owned -->
+                    <TextBlock Text="Shares Owned:"
                                Foreground="White"
-                               FontSize="16"/>
+                               FontWeight="Medium"/>
+                    <TextBlock Text="{Binding SharesOwned}"
+                               Foreground="White"
+                               Margin="0,0,0,10"/>
 
-                    <TextBox Text="{Binding ShareAmount}"
+                    <!-- Share Price -->
+                    <TextBlock Text="Share Price:"
+                               Foreground="White"
+                               FontWeight="Medium"/>
+
+                    <TextBlock Text="{Binding CurrentPrice, StringFormat=C}"
+                               Foreground="White"
+                               Margin="0,0,0,10"/>
+
+                    <!-- Total Price -->
+                    <TextBlock Text="Total:"
+                               Foreground="White"
+                               FontWeight="Medium"/>
+
+                    <TextBlock Text="{Binding TotalPrice, StringFormat=C}"
+                               Foreground="White"
+                               Margin="0,0,0,10"/>
+                    <!-- Balance and Remaining Balance -->
+                    <TextBlock Text="Available Balance:"
+                               Foreground="White"
+                               FontWeight="Medium"/>
+
+                    <TextBlock Text="{Binding Balance, StringFormat=C}"
+                               Foreground="White"
+                               Margin="0,0,0,10"/>
+                    <TextBlock Text="Remaining Balance:"
+                               Foreground="White"
+                               FontWeight="Medium"/>
+
+                    <TextBlock Text="{Binding RemainingBalance, StringFormat=C}"
+                               Foreground="White"/>
+
+                    <!-- Share amount input -->
+                    <TextBox Text="{Binding ShareAmount, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
                              Margin="0,10,0,10"
                              Background="#2a2a2a"
                              Foreground="White"
                              BorderBrush="#444"
                              BorderThickness="1"
-                             Padding="5"/>
+                             Padding="5"
+                             PreviewTextInput="NumberOnly_PreviewTextInput"
+                             DataObject.Pasting="NumberOnly_Pasting"/>
 
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Right">
+
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
                         <Button Content="Confirm"
                                 Width="80"
                                 Margin="0,0,10,0"
-                                Command="{Binding ConfirmCommand}">
+                                Command="{Binding ConfirmCommand}"
+                                IsEnabled="{Binding CanExecuteTrade}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border CornerRadius="5"
-                                            BorderBrush="#555" BorderThickness="1">
+                                    <Border x:Name="border" CornerRadius="5"
+                BorderBrush="#555" BorderThickness="1">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                <GradientStop Color="#0d251f" Offset="0"/>
-                                                <GradientStop Color="#12342c" Offset="1"/>
+                                                <GradientStop Color="#004731" Offset="0"/>
+                                                <GradientStop Color="#00895d" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          Margin="5"/>
+
+                                        <ContentPresenter x:Name="contentPresenter"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Margin="5"
+                              TextElement.Foreground="White"/>
                                     </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <!-- Hover -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                        </Trigger>
+
+                                        <!-- Pressed -->
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                                        </Trigger>
+
+                                        <!-- Disabled -->
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.4"/>
+                                            <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="#666"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Button.Template>
+
                         </Button>
 
+
+
+                        <!-- Cancel -->
                         <Button Content="Cancel"
                                 Width="80"
                                 Command="{Binding CancelCommand}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border CornerRadius="5"
-                                            BorderBrush="#555" BorderThickness="1">
+                                    <Border x:Name="border" CornerRadius="5"
+                BorderBrush="#555" BorderThickness="1">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                <GradientStop Color="#191919" Offset="0"/>
+                                                <GradientStop Color="#0D0D0D" Offset="0"/>
                                                 <GradientStop Color="#121212" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
+
                                         <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          Margin="5"/>
+                              VerticalAlignment="Center"
+                              Margin="5"
+                              TextElement.Foreground="White"/>
                                     </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <!-- Hover -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                        </Trigger>
+
+                                        <!-- Pressed -->
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Button.Template>
+
                         </Button>
 
                     </StackPanel>
 
                 </StackPanel>
-
             </Grid>
-
         </Border>
     </Border>
 </Window>
