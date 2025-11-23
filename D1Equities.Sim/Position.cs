@@ -11,17 +11,17 @@ namespace D1Equities.Sim
         //Private fields
         private string _ticker;
         private int _shares;
-        private decimal _averagePrice;
+        private decimal _averageEntryPrice;
         private decimal _currentPrice;
 
         //Properties med PascalCase
         public string Ticker => _ticker;
         public int Shares => _shares;
-        public decimal AveragePrice => _averagePrice;
+        public decimal AveragePrice => _averageEntryPrice;
         public decimal CurrentPrice => _currentPrice;
 
         //Beräkna properties 
-        public decimal TotalCost => _shares * _averagePrice;
+        public decimal TotalCost => _shares * _averageEntryPrice;
         public decimal CurentValue => _shares * _currentPrice;
         public decimal ProfitLoss => CurentValue - TotalCost;
         public decimal ProfitLossPercent 
@@ -38,7 +38,7 @@ namespace D1Equities.Sim
         {
             _ticker = ticker;
             _shares = shares;
-            _averagePrice = purchasePrice;
+            _averageEntryPrice = purchasePrice;
             _currentPrice = purchasePrice;
         }
 
@@ -46,9 +46,9 @@ namespace D1Equities.Sim
         public void AddShares(int quantity, decimal Price)
         {
             //Beräkna ny genomsnittspris
-            decimal totalCost = (_averagePrice * _shares) + (Price * quantity);
+            decimal totalCost = (_averageEntryPrice * _shares) + (Price * quantity);
             _shares += quantity;
-            _averagePrice = totalCost / _shares;
+            _averageEntryPrice = totalCost / _shares;
         }
 
         public void RemoveShares(int quantity)
@@ -59,7 +59,7 @@ namespace D1Equities.Sim
         }
         public string GetPositionSummary()//Sammanfattning av position
         {
-            return $"Ticker: {_ticker}, Shares: {_shares}, Avg Price: {_averagePrice:C}, Current Price: {_currentPrice:C}, P/L: {ProfitLoss:C} ({ProfitLossPercent:F2}%)";
+            return $"Ticker: {_ticker}, Shares: {_shares}, Avg Price: {_averageEntryPrice:C}, Current Price: {_currentPrice:C}, P/L: {ProfitLoss:C} ({ProfitLossPercent:F2}%)";
         }
     }
 }

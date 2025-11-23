@@ -15,10 +15,10 @@ namespace D1Equities.GUI.ViewModel
     public class StockViewModel : ViewModelBase
     {
 
-        private double _currentPrice;
+        private decimal _currentPrice;
         private CandleStickSeries _candleSeries;
 
-        public double CurrentPrice
+        public decimal CurrentPrice
         {
             get => _currentPrice;
             set
@@ -71,6 +71,9 @@ namespace D1Equities.GUI.ViewModel
             set { _companyName = value; OnPropertyChanged(nameof(CompanyName)); }
         }
 
+        public ICommand BuyCommand { get; }
+        public ICommand SellCommand { get; }
+
 
         public PlotModel CandlestickModel { get; private set; }
 
@@ -82,6 +85,9 @@ namespace D1Equities.GUI.ViewModel
         public ObservableCollection<StockDetail> StockDetails { get; } = new ObservableCollection<StockDetail>();
         public StockViewModel()
         {
+            BuyCommand = new RelayCommand(_ => OpenTradeDialog(true));
+            SellCommand = new RelayCommand(_ => OpenTradeDialog(false));
+
             StockDetails.Add(new StockDetail { Label = "Market Cap", Value = "2.5T" });
             StockDetails.Add(new StockDetail { Label = "P/E Ratio", Value = "28.7" });
             StockDetails.Add(new StockDetail { Label = "Dividend Yield", Value = "0.55%" });
@@ -171,7 +177,7 @@ namespace D1Equities.GUI.ViewModel
             CandlestickModel.InvalidatePlot(true);
             var currentPrice = candleSeries.Items.Last().Close;
             var openPrice = candleSeries.Items.First().Open;
-            CurrentPrice = currentPrice;
+            CurrentPrice = (decimal)currentPrice;
             PriceDifference = Math.Round((currentPrice - openPrice),2);
             PercentChange = Math.Round(((currentPrice - openPrice) / openPrice) * 100, 2);
         }
@@ -201,6 +207,38 @@ namespace D1Equities.GUI.ViewModel
 
             _candleSeries.Items[idx] = last;
             CandlestickModel.InvalidatePlot(false);
+        }
+        private void OpenTradeDialog(bool isBuy)
+        {
+            TradeDialogViewModel vm = null!; // placeholder
+
+            vm = new TradeDialogViewModel(result =>
+            {
+                if (result)
+                {
+                    ExecuteTrade(isBuy, vm.ShareAmount, vm.CurrentPrice);
+                }
+            });
+
+            vm.CurrentPrice = this.CurrentPrice;
+            vm.Title = isBuy ? "Buy Shares" : "Sell Shares";
+
+            var dialog = new TradeDialog { DataContext = vm };
+            dialog.ShowDialog();
+        }
+
+        private void ExecuteTrade(bool isBuy, int amount, decimal price)
+        {
+            if (amount <= 0) return;
+
+            if (isBuy)
+            {
+                PortfolioService.BuyStock(Ticker, amount, price);
+            }
+            else
+            {
+                PortfolioService.SellStock(Ticker, amount, price);
+            }
         }
     }
 }
