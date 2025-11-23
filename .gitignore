@@ -417,9 +417,7 @@ FodyWeavers.xsd
 *.msm
 *.msp
 D1Equities.GUI/Images/Weekly-Status-Dashboard-Template-Templatelab.com_-scaled.jpg
-D1Equities.GUI/D1Equities.GUI.csproj
-D1Equities.GUI/D1Equities.GUI.csproj
 .env
 .DS_Store
 /.idea
-D1Equities.GUI/View/MainView.xaml
+D1Equities.GUI/portfolios
