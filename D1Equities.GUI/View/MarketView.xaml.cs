@@ -27,11 +27,11 @@ namespace D1Equities.GUI.View
             Loaded += MarketView_Loaded;
         }
 
-        private async void MarketView_Loaded(object sender, RoutedEventArgs e)
+        private void MarketView_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataContext is MarketViewModel vm)
             {
-                await vm.InitializeAsync();
+                vm.InitializeAsync();
             }
         }
     }
