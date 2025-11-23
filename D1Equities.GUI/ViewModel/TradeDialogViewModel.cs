@@ -14,8 +14,8 @@ namespace D1Equities.GUI.ViewModel
 
         public TradeDialogViewModel(Action<bool> closeCallback)
         {
-            ConfirmCommand = new RelayCommand(_ => closeCallback(true));
-            CancelCommand = new RelayCommand(_ => closeCallback(false));
+            ConfirmCommand = new ViewModelCommand(_ => closeCallback(true));
+            CancelCommand = new ViewModelCommand(_ => closeCallback(false));
         }
     }
 }
