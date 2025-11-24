@@ -95,7 +95,7 @@ namespace D1Equities.GUI.ViewModel
             return ValidData;
         }
 
-        private void ExecuteLoginCommand(object obj)
+        private async void ExecuteLoginCommand(object obj)
         {
             var isValidUser = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
             if (isValidUser)
@@ -110,6 +110,8 @@ namespace D1Equities.GUI.ViewModel
                     return;
                 }
 
+                var userPositionSymbols = user.Portfolio.Positions.Keys.ToArray();
+                await App.Simulator.LoadStocks(userPositionSymbols);
                 Application.Current.Properties["User"] = user;
                 IsViewVisible = false;
             }

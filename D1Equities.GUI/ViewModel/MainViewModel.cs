@@ -3,7 +3,9 @@ using D1Equities.GUI.View;
 using FontAwesome.Sharp;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +20,7 @@ namespace D1Equities.GUI.ViewModel
         private string _caption;
         private IconChar _icon;
         private readonly UserModel _currentUser;
+        private string[] _userPositionSymbols;
 
         // Properties
         public ViewModelBase CurrentChildView
@@ -60,11 +63,13 @@ namespace D1Equities.GUI.ViewModel
         public MainViewModel(UserModel user)
         {
             _currentUser = user ?? throw new ArgumentNullException(nameof(user));
+            _userPositionSymbols = _currentUser.Portfolio.Positions.Keys.ToArray();
 
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowPortfolioViewCommand = new ViewModelCommand(ExecuteShowPortfolioCommand);
             ShowMarketViewCommand = new ViewModelCommand(ExecuteShowMarketCommand);
             ShowStockViewCommand = new ViewModelCommand(ExecuteShowStockCommand);
+
 
             // Default view
             ExecuteShowHomeViewCommand(null);
@@ -73,15 +78,19 @@ namespace D1Equities.GUI.ViewModel
         // Methods for commands
         private void ExecuteShowHomeViewCommand(object obj)
         {
-            App.Simulator.UnloadAllStocks();
-            CurrentChildView = new HomeViewModel();
+            UpdateUserPositions();
+            App.Simulator.UnsubscribeAllStocks(_userPositionSymbols);
+            var vm = new HomeViewModel();
+            vm.InitializeAsync();
+            CurrentChildView = vm;
             Caption = "Home";
             Icon = IconChar.Home;
         }
 
         private void ExecuteShowPortfolioCommand(object obj)
         {
-            App.Simulator.UnloadAllStocks();
+            UpdateUserPositions();
+            App.Simulator.UnsubscribeAllStocks(_userPositionSymbols);
             // Always use the injected _currentUser
             CurrentChildView = new PortfolioViewModel(_currentUser);
             Caption = "Portfolio";
@@ -90,7 +99,8 @@ namespace D1Equities.GUI.ViewModel
 
         private void ExecuteShowMarketCommand(object obj)
         {
-            App.Simulator.UnloadAllStocks();
+            UpdateUserPositions();
+            App.Simulator.UnsubscribeAllStocks(_userPositionSymbols);
             CurrentChildView = new MarketViewModel();
             Caption = "Market";
             Icon = IconChar.ChartLine;
@@ -98,6 +108,8 @@ namespace D1Equities.GUI.ViewModel
 
         private async void ExecuteShowStockCommand(object obj)
         {
+            UpdateUserPositions();
+            App.Simulator.UnsubscribeAllStocks(_userPositionSymbols);
             string ticker = obj as string ?? "AAPL";
 
             var vm = new StockViewModel();
@@ -114,6 +126,7 @@ namespace D1Equities.GUI.ViewModel
 
             if (CurrentChildView is PortfolioViewModel vm)
                 vm.Refresh();
+            UpdateUserPositions();
         }
 
         private void ExecuteSellStock(string ticker, decimal price, int quantity)
@@ -123,6 +136,12 @@ namespace D1Equities.GUI.ViewModel
 
             if (CurrentChildView is PortfolioViewModel vm)
                 vm.Refresh();
+            UpdateUserPositions();
+        }
+
+        private void UpdateUserPositions()
+        {
+            _userPositionSymbols = _currentUser.Portfolio.Positions.Keys.ToArray();
         }
     }
 }
