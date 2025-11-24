@@ -156,7 +156,7 @@ namespace D1Equities.GUI.ViewModel
                 await sim.LoadStocks([ticker]);
 
             if (!sim.IsStockLoaded(ticker))
-                return;
+                throw new Exception("couldnt load stock in stock view");
 
             var stock = sim.GetLoadedStock(ticker);
 
@@ -189,6 +189,7 @@ namespace D1Equities.GUI.ViewModel
 
         private void Stock_NewCandle(object? sender, NewCandleEventArgs e)
         {
+            CurrentPrice = e.Candle.Close;
             var item = new HighLowItem(
                 DateTimeAxis.ToDouble(e.Candle.DateTime),
                 (double)e.Candle.High,
@@ -197,11 +198,13 @@ namespace D1Equities.GUI.ViewModel
                 (double)e.Candle.Close);
 
             _candleSeries.Items.Add(item);
-            CandlestickModel.InvalidatePlot(false);
+            CandlestickModel.InvalidatePlot(true);
+            UpdateStockData();
         }
 
         private void Stock_CandleUpdated(object? sender, CandleUpdatedEventArgs e)
         {
+
             int idx = _candleSeries.Items.Count - 1;
             var last = _candleSeries.Items[idx];
 
@@ -210,8 +213,19 @@ namespace D1Equities.GUI.ViewModel
             last.High = (double)e.Candle.High;
             last.Low = (double)e.Candle.Low;
 
+
             _candleSeries.Items[idx] = last;
-            CandlestickModel.InvalidatePlot(false);
+            CandlestickModel.InvalidatePlot(true);
+            UpdateStockData();
+        }
+
+        private void UpdateStockData()
+        {
+            var currentPrice = _candleSeries.Items.Last().Close;
+            var openPrice = _candleSeries.Items.First().Open;
+            CurrentPrice = (decimal)currentPrice;
+            PriceDifference = Math.Round((currentPrice - openPrice),2);
+            PercentChange = Math.Round(((currentPrice - openPrice) / openPrice) * 100, 2);
         }
         private void OpenTradeDialog(bool isBuy)
         {
