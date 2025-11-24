@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using dotenv.net;
+using System.Linq.Expressions;
 
 
 namespace D1Equities.GUI
@@ -59,7 +60,35 @@ namespace D1Equities.GUI
         protected override void OnExit(ExitEventArgs e)
         {
             isAppShuttingDown = true;
-            
+
+            try 
+            {
+                var user = Application.Current.Properties["User"];
+                if (user != null && user.Portfolio != null)
+                {
+                    try
+                    {
+                        user.Portfolio.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        try
+                        {
+
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                        
+                    }
+                }
+            }
+            catch
+            {
+               
+            }
         }
     }
 }
