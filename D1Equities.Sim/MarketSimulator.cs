@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.Net.Http.Json;
+using System.Net.WebSockets;
 using System.Text.Json;
 using Websocket.Client;
 
@@ -98,15 +99,6 @@ namespace D1Equities.Sim
             }
         }
 
-        private string TrimCompanyName(string name)
-        {
-            name = name.Trim();
-
-            return name.Length <= 50
-                ? name
-                : name.Substring(0, 50).TrimEnd() + "...";
-        }
-
         private async Task<WebsocketClient> InitWebsocketClient()
         {
             var client = new WebsocketClient(new Uri("wss://stream.data.alpaca.markets/v2/iex"))
@@ -115,7 +107,24 @@ namespace D1Equities.Sim
             };
 
             await client.Start();
+            //client.DisconnectionHappened.Subscribe(info =>
+            //{
+            //    throw new Exception($"Websocket disconnected: {info.Type} - {info.CloseStatusDescription}");
+            //});
 
+            AuthenticateWebsocket(client);
+
+            client.MessageReceived.Subscribe(msg =>
+            {
+                if (!string.IsNullOrEmpty(msg.Text))
+                    HandleWebSocketMessage(msg.Text);
+            });
+
+            return client;
+        }
+        
+        private void AuthenticateWebsocket(WebsocketClient client)
+        {
             var authMessage = JsonSerializer.Serialize(
                 new
                 {
@@ -126,47 +135,48 @@ namespace D1Equities.Sim
             );
 
             client.Send(authMessage);
-
-            client.MessageReceived.Subscribe(msg =>
-            {
-                if (!string.IsNullOrEmpty(msg.Text))
-                    HandleWebSocketMessage(msg.Text);
-            });
-
-            return client;
         }
 
-        public async Task LoadStock(string symbol)
+        public async Task LoadStocks(string[] symbols)
         {
-            var stock = new Stock(symbol) { PriceHistory = await GetStockHistoryAsync(symbol) };
-            if (stock.PriceHistory.Count == 0)
+            foreach (var symbol in symbols)
+            {
+                var stock = new Stock(symbol) { PriceHistory = await GetStockHistoryAsync(symbol) };
+
+                if (stock.PriceHistory.Count == 0)
+                    return;
+
+                stock.CurrentCandle = stock.PriceHistory.Last();
+
+                //Alpaca allows max 30 websocket subscriptions
+                if (_loadedStocks.Count >= 30)
+                    throw new Exception("Cannot load more than 30 stocks");
+
+                if (!_loadedStocks.TryAdd(stock.Symbol, stock))
+                    throw new Exception($"Couldnt add '{symbol}' to loaded stocks");
+            }
+
+            SubscribeStocks(symbols);
+        }
+        public void UnsubscribeAllStocks(string[] excludedSymbols)
+        {
+            var symbols = _loadedStocks.Keys.Where(s => !excludedSymbols.Contains(s)).ToArray();
+            if (symbols.Length == 0)
                 return;
 
-            stock.CurrentCandle = stock.PriceHistory.Last();
+            foreach(var symbol in symbols)
+                _loadedStocks.Remove(symbol);
 
-            //Alpaca allows max 30 websocket subscriptions
-            if(_loadedStocks.Count <= 30)
-                await SubscribeStockAsync(stock.Symbol);
+            var unsubscribeMsg = JsonSerializer.Serialize(
+                new
+                {
+                    action = "unsubscribe",
+                    trades = symbols,
+                    bars = symbols,
+                }
+            );
 
-            if (!_loadedStocks.TryAdd(stock.Symbol, stock))
-                throw new Exception($"Couldnt add '{symbol}' to loaded stocks");
-        }
-
-        public async Task UnloadStock(string symbol)
-        {
-            if (!_loadedStocks.ContainsKey(symbol))
-                throw new Exception($"Cannot remove stock with '{symbol}' because its not loaded");
-
-            UnsubscribeStock(symbol);
-            _loadedStocks.Remove(symbol);
-        }
-
-        public async Task UnloadAllStocks()
-        {
-            foreach(var key in _loadedStocks.Keys)
-            {
-                UnloadStock(key);
-            }
+            _webSocketClient.Send(unsubscribeMsg);
         }
 
         public bool IsStockLoaded(string symbol) => _loadedStocks.ContainsKey(symbol);
@@ -261,28 +271,14 @@ namespace D1Equities.Sim
             }
         }
 
-        private void UnsubscribeStock(string symbol)
-        {
-            var unsubscribeMsg = JsonSerializer.Serialize(
-                new
-                {
-                    action = "unsubscribe",
-                    trades = new[] { symbol },
-                    bars = new[] { symbol },
-                }
-            );
-
-            _webSocketClient.Send(unsubscribeMsg);
-        }
-
-        private async Task SubscribeStockAsync(string symbol) 
+        public void SubscribeStocks(string[] symbols) 
         {
             var subscribeMsg = JsonSerializer.Serialize(
                 new
                 {
                     action = "subscribe",
-                    trades = new[] { symbol },
-                    bars = new[] { symbol },
+                    trades = symbols,
+                    bars = symbols,
                 }
             );
 
@@ -307,6 +303,17 @@ namespace D1Equities.Sim
                         var candleStick = JsonSerializer.Deserialize<CandleStick>(item);
                         HandleBarMessage(candleStick);
                         break;
+                    case "error":
+                        var msg = item.GetProperty("msg").ToString();
+                        var msgCode = int.Parse(item.GetProperty("code").ToString());
+
+                        if (msg.Contains("auth") && msgCode == 401)
+                        {
+                            AuthenticateWebsocket(_webSocketClient);
+                            break;
+                        }
+                            
+                        throw new Exception($"Error received from websocket: {msg}");
                 }
             }
         }
@@ -314,7 +321,8 @@ namespace D1Equities.Sim
         private void HandleBarMessage(CandleStick? candleStick)
         {
             if (!_loadedStocks.TryGetValue(candleStick.Symbol, out var stock))
-                throw new Exception("Received websocket on symbol that is not in loaded stocks");
+                return;
+                //throw new Exception("Received websocket message on stock that isnt loaded");
 
             stock.PriceHistory.Add(stock.CurrentCandle);
             stock.CurrentCandle = candleStick;
@@ -324,7 +332,8 @@ namespace D1Equities.Sim
         private void HandleTradeMessage(Trade? trade)
         {
             if (!_loadedStocks.TryGetValue(trade.Symbol, out var stock))
-                throw new Exception("Received websocket on symbol that is not in loaded stocks");
+                return;
+                //throw new Exception("Received websocket message on stock that isnt loaded");
 
             var candle = stock.CurrentCandle;
 

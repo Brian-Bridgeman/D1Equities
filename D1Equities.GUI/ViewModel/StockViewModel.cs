@@ -153,7 +153,7 @@ namespace D1Equities.GUI.ViewModel
             CompanyName = sim.AvailableSymbols[Ticker].Name;
 
             if (!sim.IsStockLoaded(ticker))
-                await sim.LoadStock(ticker);
+                await sim.LoadStocks([ticker]);
 
             if (!sim.IsStockLoaded(ticker))
                 return;
