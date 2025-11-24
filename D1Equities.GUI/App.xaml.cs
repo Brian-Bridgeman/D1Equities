@@ -91,10 +91,11 @@ namespace D1Equities.GUI
                     }
                 }
             }
-            catch
+            finally
             {
-
+                try { Simulator?.Dispose(); } catch { /* swallow */ }
             }
+            base.OnExit(e);
         }
     }
 }
