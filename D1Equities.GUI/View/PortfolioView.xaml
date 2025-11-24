@@ -20,21 +20,6 @@
         </Grid.RowDefinitions>
 
         <!-- TOP PANEL (formerly right panel) -->
-        <Border Grid.Row="0"
-                CornerRadius="10"
-                Padding="30"
-                Margin="0,0,0,10"
-                BorderBrush="#333"
-                BorderThickness="1">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.5">
-                    <GradientStop Color="#191919" Offset="0"/>
-                    <GradientStop Color="#121212" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.Background>
-
-            <StackPanel Orientation="Horizontal"/>
-        </Border>
 
         <!-- MAIN PANEL -->
         <Border Grid.Row="1"
