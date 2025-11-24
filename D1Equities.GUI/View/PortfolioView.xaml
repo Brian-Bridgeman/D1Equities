@@ -9,9 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.DataContext>
-        <viewModel:MarketViewModel/>
-    </UserControl.DataContext>
+
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -40,10 +38,10 @@
 
         <!-- MAIN PANEL -->
         <Border Grid.Row="1"
-                CornerRadius="10"
-                Padding="20"
-                BorderBrush="#333"
-                BorderThickness="1">
+        CornerRadius="10"
+        Padding="20"
+        BorderBrush="#333"
+        BorderThickness="1">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="#191919" Offset="0"/>
@@ -54,55 +52,71 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <!-- Header -->
                     <RowDefinition Height="*"/>
+                    <!-- Scrollable list -->
                 </Grid.RowDefinitions>
 
+                <!-- HEADER ROW -->
+                <Grid Grid.Row="0" Margin="10,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <!-- Ticker -->
+                        <ColumnDefinition Width="1*"/>
+                        <!-- Shares -->
+                        <ColumnDefinition Width="1*"/>
+                        <!-- Avg Price -->
+                        <ColumnDefinition Width="1*"/>
+                        <!-- Current Price -->
+                        <ColumnDefinition Width="1*"/>
+                        <!-- P/L % -->
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Ticker" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Grid.Column="1" Text="Shares" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Grid.Column="2" Text="Avg Price" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Grid.Column="3" Text="Current" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Grid.Column="4" Text="P/L %" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
+                </Grid>
+
                 <!-- Scroll list -->
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel x:Name="ItemsPanel" Orientation="Vertical">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding Positions}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Style="{StaticResource stockButton}"
+                                     Command="{Binding DataContext.ShowStockViewCommand,
+                                               RelativeSource={RelativeSource AncestorType=Window}}"
+                                     CommandParameter="{Binding Ticker}">
+                                    <Grid Margin="10,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <!-- Ticker -->
+                                            <ColumnDefinition Width="1*"/>
+                                            <!-- Shares -->
+                                            <ColumnDefinition Width="1*"/>
+                                            <!-- Avg Price -->
+                                            <ColumnDefinition Width="1*"/>
+                                            <!-- Current Price -->
+                                            <ColumnDefinition Width="1*"/>
+                                            <!-- P/L % -->
+                                        </Grid.ColumnDefinitions>
 
-                        <ItemsControl ItemsSource="{Binding Stocks}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton Style="{StaticResource stockButton}"
-                                                 Command="{Binding DataContext.ShowStockViewCommand,
-                                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                                                 CommandParameter="{Binding Ticker}">
-                                        <Grid Margin="10,0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Grid.Column="0"
-                                                       Text="{Binding Ticker}"
-                                                       Foreground="White"
-                                                       FontSize="20"
-                                                       FontWeight="Medium"
-                                                       VerticalAlignment="Center"/>
-
-                                            <StackPanel Grid.Column="1"
-                                                        Orientation="Horizontal"
-                                                        VerticalAlignment="Center"
-                                                        Margin="20,0,0,0">
-                                                <TextBlock Text="$" Foreground="White" FontSize="18" Margin="0,0,2,0"/>
-                                                <TextBlock Text="{Binding Price}" Foreground="White" FontSize="18" Margin="0,0,8,0"/>
-                                                <TextBlock Text="{Binding Percent}" Foreground="{StaticResource D1Green}" FontSize="18" Margin="0,0,2,0"/>
-                                                <TextBlock Text="%" Foreground="{StaticResource D1Green}" FontSize="18"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </RadioButton>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                    </StackPanel>
+                                        <TextBlock Grid.Column="0" Text="{Binding Ticker}" Foreground="White" FontSize="20" FontWeight="Medium"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Shares}" Foreground="White" FontSize="18"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding AveragePrice}" Foreground="White" FontSize="18"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding CurrentPrice}" Foreground="White" FontSize="18"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding ProfitPercent}" Foreground="{StaticResource D1Green}" FontSize="18"/>
+                                    </Grid>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Grid>
-
         </Border>
+
+
     </Grid>
 
 </UserControl>
