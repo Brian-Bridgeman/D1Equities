@@ -248,33 +248,55 @@ namespace D1Equities.GUI.ViewModel
             if (amount <= 0) return;
 
             var user = Application.Current.Properties["User"] as UserModel;
+            if (user == null) return;
 
-
-
-            if (isBuy)
+            try
             {
-                try
+                if (isBuy)
                 {
-                    user.Portfolio.OpenPosition(Ticker, price, amount);
+                    // Open or add shares
+                    user.Portfolio.BuyShares(Ticker, price, amount);
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Buy Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    // Sell shares properly
+                    if (!user.Portfolio.Positions.TryGetValue(Ticker, out var pos))
+                        throw new Exception($"No shares owned for {Ticker}");
+
+                    if (amount > pos.Shares)
+                        throw new Exception("Cannot sell more shares than you own");
+
+                    // Remove shares and update balance
+                    pos.RemoveShares(amount);
+                    user.Portfolio.Balance += amount * price;
+
+                    // Remove from portfolio if zero shares left
+                    if (pos.Shares == 0)
+                        user.Portfolio.Positions.Remove(Ticker);
+
+                    // Track equity history
+                    user.Portfolio.EquityHistory.Add(new EquityHistory(DateTime.Now, user.Portfolio.TotalEquity));
+                }
+
+                user.Portfolio.Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, isBuy ? "Buy Error" : "Sell Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Refresh PortfolioView if visible
+            if (Application.Current.Windows.OfType<MainView>().FirstOrDefault() is MainView mainView)
+            {
+                if (mainView.DataContext is MainViewModel mainVm &&
+                    mainVm.CurrentChildView is PortfolioViewModel portfolioVm)
+                {
+                    portfolioVm.Refresh();
                 }
             }
-            else
-            {
-                try
-                {
-                    user.Portfolio.ClosePosition(Ticker);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Sell Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-
-            user.Portfolio.Save(); // persist portfolio changes
         }
+
+
     }
 }

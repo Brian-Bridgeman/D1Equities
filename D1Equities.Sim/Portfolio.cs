@@ -66,7 +66,7 @@ namespace D1Equities.Sim
             File.WriteAllText(PortfolioPath!, JsonSerializer.Serialize(this));
         }
 
-        public void OpenPosition(string symbol, decimal price, int quantity)
+        public void BuyShares(string symbol, decimal price, int quantity)
         {
             //TODO - skapa Position och l'gg till i Positions eller l
             if (string.IsNullOrWhiteSpace(symbol)) 
@@ -96,17 +96,24 @@ namespace D1Equities.Sim
 
         }
 
-        public void ClosePosition(string symbol)
+
+        public void SellShares(string symbol, decimal price, int quantity)
         {
-            var hasPos = Positions.TryGetValue(symbol, out var pos);
-            if (!hasPos)
-                throw new Exception($"Cant close position in {symbol} because it doesnt exist");
+            if (!Positions.TryGetValue(symbol, out var pos))
+                throw new Exception($"No position for {symbol}");
 
-            //TODO - l's v'rdet av pos och ta bort ur dict och l'gg till v'rde pa balance
-            decimal proceeds = pos!.CurentValue;
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be positive");
 
-            Positions.Remove(symbol);
-            Balance += proceeds;
+            if (quantity > pos.Shares)
+                throw new Exception("Cannot sell more shares than owned");
+
+            pos.RemoveShares(quantity);
+            Balance += quantity * price;
+
+            // Only remove if zero shares remain
+            if (pos.Shares == 0)
+                Positions.Remove(symbol);
 
             EquityHistory.Add(new EquityHistory(DateTime.Now, TotalEquity));
         }
