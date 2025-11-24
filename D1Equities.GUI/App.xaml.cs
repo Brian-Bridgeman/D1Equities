@@ -55,5 +55,11 @@ namespace D1Equities.GUI
 
             loginView.IsVisibleChanged += handler;
         }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            isAppShuttingDown = true;
+            
+        }
     }
 }
