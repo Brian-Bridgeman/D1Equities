@@ -9,13 +9,13 @@ namespace D1Equities.Sim
 {
     public class Position  
     {
-        //Private fields
+
         private string _ticker;
         private int _shares;
         private decimal _averageEntryPrice;
         private decimal _currentPrice;
 
-        //Properties med PascalCase
+
         public string Ticker { 
             get
             {
@@ -86,7 +86,7 @@ namespace D1Equities.Sim
             _currentPrice = purchasePrice;
         }
 
-        //Metoder med PascalCase
+
         public void AddShares(int quantity, decimal Price)
         {
             //Beräkna ny genomsnittspris
@@ -94,13 +94,15 @@ namespace D1Equities.Sim
             _shares += quantity;
             _averageEntryPrice = totalCost / _shares;
         }
-
         public void RemoveShares(int quantity)
         {
             if (quantity > _shares)
-                throw new ArgumentException("Kan inte sälja fler aktier än du äger.");
+                throw new ArgumentException("Cannot sell more shares than you own.");
+
             _shares -= quantity;
+
+
         }
-        
+
     }
 }
