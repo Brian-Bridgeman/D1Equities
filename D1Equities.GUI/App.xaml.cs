@@ -35,7 +35,7 @@ namespace D1Equities.GUI
             loginView.Show();
             //declare handler as variable so we can explicitly unsubscribe
 
-            DependencyPropertyChangedEventHandler handler = null;
+            DependencyPropertyChangedEventHandler handler = null!;
 
             handler = (s, ev) =>
             {
