@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using dotenv.net;
 using System.Linq.Expressions;
+using System.IO;
 
 
 namespace D1Equities.GUI
@@ -74,16 +75,18 @@ namespace D1Equities.GUI
                     {
                         try
                         {
-
+                            var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+                            Directory.CreateDirectory(logDir);
+                            var logFile = Path.Combine(logDir, "Save_error.log");
+                            var line = $"{DateTime.Now}: Error saving portfolio on exit: {ex}\n";
+                            File.AppendAllText(logFile, line);
                         }
-                        catch (Exception)
+                        catch
                         {
+                            /* swallow */
 
-                            throw;
                         }
-                        
                     }
-                }
             }
             catch
             {
