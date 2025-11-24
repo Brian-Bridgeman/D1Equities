@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Forms;
 
 namespace D1Equities.GUI.ViewModel
@@ -43,55 +45,65 @@ namespace D1Equities.GUI.ViewModel
             set
             {
                 _searchText = value;
+                OnPropertyChanged();
                 FilterResults();
+            }
+        }
+
+        private ObservableCollection<Ticker> _stocks = new();
+        public ObservableCollection<Ticker> Stocks
+        {
+            get => _stocks;
+            set
+            {
+                _stocks = value;
                 OnPropertyChanged();
             }
         }
 
-        public ObservableCollection<StockItem> Stocks { get; } = new();
+        public ObservableCollection<MostActiveStock> MostActive { get; } = new();
+        public ObservableCollection<MoverItem> MarketMovers { get; } = new();
 
         public void InitializeAsync()
         {
             var sim = App.Simulator;
 
-            foreach(var ticker in sim.AvailableSymbols)
+            if(sim.MarketMovers != null)
             {
-                Stocks.Add(new StockItem
+                foreach(var mover in sim.MarketMovers.Gainers)
                 {
-                    Ticker = ticker,
-                });
+                    MarketMovers.Add(mover);
+                }
             }
+
+            if(sim.MostActiveStocks != null)
+            {
+                foreach(var stock in sim.MostActiveStocks.MostActives)
+                {
+                    MostActive.Add(stock);
+                }
+            }
+
+            Stocks = new ObservableCollection<Ticker>(sim.AvailableSymbols);
         }
 
-        public void FilterResults()
+        public async void FilterResults()
         {
             var sim = App.Simulator;
+            string query = SearchText;
 
-            Stocks.Clear();
-
-            IEnumerable<string> matches;
-
-            if (string.IsNullOrWhiteSpace(SearchText))
+            var results = await Task.Run(() =>
             {
-                matches = sim.AvailableSymbols;
-            }
-            else
-            {
-                matches = sim.AvailableSymbols
-                    .Where(s => s.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
-                    .Take(9);
-            }
+                if (string.IsNullOrWhiteSpace(query))
+                    return sim.AvailableSymbols;
 
-            foreach (var ticker in matches)
-            {
-                var item = new StockItem
-                {
-                    Ticker = ticker,
-                };
+                return sim.AvailableSymbols
+                    .Where(s =>
+                        s.Symbol.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                        s.Name.Contains(query, StringComparison.OrdinalIgnoreCase));
+            });
 
-                Stocks.Add(item);
-
-            }
+            Stocks = new ObservableCollection<Ticker>(results);
         }
     }
 }
