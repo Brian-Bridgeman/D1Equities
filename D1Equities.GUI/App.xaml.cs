@@ -21,7 +21,7 @@ namespace D1Equities.GUI
     public partial class App : Application
     {
         //create command to get/set flag
-        public static MarketSimulator Simulator { get; set; }
+        public static MarketSimulator? Simulator { get; set; }
 
         public bool isAppShuttingDown { get; set; }
 
@@ -91,10 +91,11 @@ namespace D1Equities.GUI
                     }
                 }
             }
-            catch
+            finally
             {
-
+                try { Simulator?.Dispose(); } catch { /* swallow */ }
             }
+            base.OnExit(e);
         }
     }
 }
