@@ -84,7 +84,6 @@ namespace D1Equities.GUI
                         catch
                         {
                             /* swallow */
-
                         }
                     }
             }
