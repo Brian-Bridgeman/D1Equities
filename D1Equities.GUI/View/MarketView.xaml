@@ -84,7 +84,7 @@
                             <RadioButton Style="{StaticResource stockButton}"
                          Command="{Binding DataContext.ShowStockViewCommand,
                                    RelativeSource={RelativeSource AncestorType=Window}}"
-                         CommandParameter="{Binding Ticker}">
+                         CommandParameter="{Binding Symbol}">
                                 <Grid Margin="10,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -94,13 +94,13 @@
                                     <TextBlock Grid.Column="0"
                                Text="{Binding Symbol}"
                                Foreground="White"
-                               FontSize="20"
+                               FontSize="14"
                                FontWeight="Medium"/>
 
                                     <TextBlock Grid.Column="1"
                                Text="{Binding Name}"
                                Foreground="Gray"
-                               FontSize="16"
+                               FontSize="12"
                                FontWeight="Normal"
                                Margin="12,0,0,0"/>
                                 </Grid>

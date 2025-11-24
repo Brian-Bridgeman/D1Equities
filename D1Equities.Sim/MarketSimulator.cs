@@ -23,7 +23,7 @@ namespace D1Equities.Sim
 
         private WebsocketClient _webSocketClient { get; set; }
 
-        public List<Ticker>? AvailableSymbols { get; }
+        public Dictionary<string, Ticker> AvailableSymbols { get; private set; } = [];
 
         public Stock? SelectedStock { get; set; }
 
@@ -39,26 +39,72 @@ namespace D1Equities.Sim
         public MarketSimulator()
         {
             _httpClient = new();
-            string csvPath = Path.Combine(".", "data", "companies.csv");
-
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-            };
-
-            using var reader = new StreamReader(csvPath);
-            using var csv = new CsvReader(reader, config);
-
-            csv.Context.RegisterClassMap<TickerCsvMap>();
-
-            AvailableSymbols = csv.GetRecords<Ticker>().ToList();
         }
 
         public async Task InitAsync()
         {
-            _webSocketClient = await InitWebsocketClient();
-            MostActiveStocks = await GetMostActiveStocks();
-            MarketMovers = await GetMarketMovers();
+            // Run tasks in parallel for maximum speed
+            var wsTask = InitWebsocketClient();
+            var activeTask = GetMostActiveStocks();
+            var moversTask = GetMarketMovers();
+            var symbolsTask = LoadAllUsSymbolsAsync();
+
+            await Task.WhenAll(wsTask, activeTask, moversTask, symbolsTask);
+
+            _webSocketClient = wsTask.Result;
+            MostActiveStocks = activeTask.Result;
+            MarketMovers = moversTask.Result;
+
+        }
+
+        public async Task LoadAllUsSymbolsAsync()
+        {
+            using var client = new HttpClient();
+
+            var nasdaqTask = client.GetStringAsync("https://www.nasdaqtrader.com/dynamic/symdir/nasdaqlisted.txt");
+            var otherTask = client.GetStringAsync("https://www.nasdaqtrader.com/dynamic/symdir/otherlisted.txt");
+
+            await Task.WhenAll(nasdaqTask, otherTask);
+
+            string nasdaqText = nasdaqTask.Result;
+            string otherText = otherTask.Result;
+
+            var availableSymbols = new List<Ticker>();
+
+            ParseSymbolFile(nasdaqText);
+            ParseSymbolFile(otherText);
+        }
+
+        private void ParseSymbolFile(string text)
+        {
+            var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+            //Hoppa över header och footer
+            foreach (var line in lines.Skip(1).SkipLast(1))
+            {
+                var parts = line.Split('|');
+
+                if (parts.Length >= 2)
+                {
+                    string symbol = parts[0].Trim();
+                    string name = parts[1].Trim();
+
+                    AvailableSymbols.TryAdd(symbol, new Ticker
+                    {
+                        Symbol = symbol,
+                        Name = name
+                    });
+                }
+            }
+        }
+
+        private string TrimCompanyName(string name)
+        {
+            name = name.Trim();
+
+            return name.Length <= 50
+                ? name
+                : name.Substring(0, 50).TrimEnd() + "...";
         }
 
         private async Task<WebsocketClient> InitWebsocketClient()
@@ -93,6 +139,9 @@ namespace D1Equities.Sim
         public async Task LoadStock(string symbol)
         {
             var stock = new Stock(symbol) { PriceHistory = await GetStockHistoryAsync(symbol) };
+            if (stock.PriceHistory.Count == 0)
+                return;
+
             stock.CurrentCandle = stock.PriceHistory.Last();
 
             //Alpaca allows max 30 websocket subscriptions
@@ -126,7 +175,7 @@ namespace D1Equities.Sim
         {
             var dates = Enumerable
                 .Range(0, 5)   
-                .Select(i => DateTime.UtcNow.AddDays(-i).AddMinutes(-15).AddSeconds(-15)) // Free api key = 15 minute delayed data AND ACTUALLY 15 SECONDS < ALPACA FYCJKHG LIAAARS
+                .Select(i => DateTime.UtcNow.AddDays(-i).AddMinutes(-15).AddSeconds(-15)) // Free api key = 15 minute delayed data AND ACTUALLY 15 SECONDS < ALPACA FYCJKHG ljugare bre
                 .Select(d => d.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"))
                 .ToArray();
 

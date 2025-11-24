@@ -84,7 +84,7 @@ namespace D1Equities.GUI.ViewModel
                 }
             }
 
-            Stocks = new ObservableCollection<Ticker>(sim.AvailableSymbols);
+            Stocks = new ObservableCollection<Ticker>(sim.AvailableSymbols.Values);
         }
 
         public async void FilterResults()
@@ -94,13 +94,14 @@ namespace D1Equities.GUI.ViewModel
 
             var results = await Task.Run(() =>
             {
+                var tickers = sim.AvailableSymbols.Values;
                 if (string.IsNullOrWhiteSpace(query))
-                    return sim.AvailableSymbols;
+                    return tickers;
 
-                return sim.AvailableSymbols
-                    .Where(s =>
-                        s.Symbol.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                        s.Name.Contains(query, StringComparison.OrdinalIgnoreCase));
+                return tickers
+                    .Where(t =>
+                        t.Symbol.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                        t.Name.Contains(query, StringComparison.OrdinalIgnoreCase));
             });
 
             Stocks = new ObservableCollection<Ticker>(results);
