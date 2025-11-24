@@ -1,5 +1,8 @@
-﻿using D1Equities.GUI.View;
+﻿using D1Equities.GUI.Model;
+using D1Equities.GUI.View;
+using D1Equities.GUI.ViewModel;
 using D1Equities.Sim;
+using dotenv.net;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,8 +10,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using dotenv.net;
-using System.Linq.Expressions;
 using System.IO;
 
 
@@ -44,7 +45,9 @@ namespace D1Equities.GUI
                     if (loginView.IsVisible == false && loginView.IsLoaded)
                     {
                         loginView.IsVisibleChanged -= handler; // Unsubscribe properly
-                        var mainView = new MainView();
+                        var user = (UserModel)Application.Current.Properties["User"];
+                        var mainVM = new MainViewModel(user);
+                        var mainView = new MainView(mainVM);
                         mainView.Show();
                         loginView.Close();
                     }
@@ -62,9 +65,9 @@ namespace D1Equities.GUI
         {
             isAppShuttingDown = true;
 
-            try 
+            try
             {
-                var user = Application.Current.Properties["User"];
+                var user = Application.Current.Properties["User"] as UserModel;
                 if (user != null && user.Portfolio != null)
                 {
                     try
@@ -83,13 +86,14 @@ namespace D1Equities.GUI
                         }
                         catch
                         {
-                            /* swallow */
+                            /* swallows*/
                         }
                     }
+                }
             }
             catch
             {
-               
+
             }
         }
     }
