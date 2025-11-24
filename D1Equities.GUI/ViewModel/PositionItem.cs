@@ -22,8 +22,7 @@ namespace D1Equities.GUI.ViewModel
             set { _currentPrice = value; OnPropertyChanged(); OnPropertyChanged(nameof(ProfitPercent)); }
         }
 
-        public decimal ProfitPercent =>
-            AveragePrice == 0 ? 0 : Math.Round(((CurrentPrice - AveragePrice) / AveragePrice) * 100, 2);
+        public decimal ProfitPercent => Shares * CurrentPrice - Shares * AveragePrice;
 
         public PositionItem(Position p)
         {
