@@ -150,9 +150,13 @@ namespace D1Equities.GUI.ViewModel
 
             var sim = App.Simulator;
             Ticker = ticker;
+            CompanyName = sim.AvailableSymbols[Ticker].Name;
 
             if (!sim.IsStockLoaded(ticker))
                 await sim.LoadStock(ticker);
+
+            if (!sim.IsStockLoaded(ticker))
+                return;
 
             var stock = sim.GetLoadedStock(ticker);
 
