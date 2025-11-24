@@ -1,6 +1,11 @@
-﻿using System;
+﻿using D1Equities.GUI.Model;
+using D1Equities.GUI.ViewModel;
+using Microsoft.VisualBasic.ApplicationServices;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,12 +13,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.ComponentModel.Design;
 
 namespace D1Equities.GUI.View
 {
@@ -22,10 +25,10 @@ namespace D1Equities.GUI.View
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView()
+        public MainView(MainViewModel vm)
         {
             InitializeComponent();
-            
+            DataContext = vm;
         }
 
         [DllImport("user32.dll")]
