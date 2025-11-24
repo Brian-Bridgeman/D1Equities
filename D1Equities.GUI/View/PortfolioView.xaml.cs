@@ -1,4 +1,6 @@
-﻿using System;
+﻿using D1Equities.GUI.Model;
+using D1Equities.GUI.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,11 @@ namespace D1Equities.GUI.View
         public PortfolioView()
         {
             InitializeComponent();
+
+        }
+        public PortfolioView(PortfolioViewModel vm) : this()
+        {
+            DataContext = vm;
         }
     }
 }
