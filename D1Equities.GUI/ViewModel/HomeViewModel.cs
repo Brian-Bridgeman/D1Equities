@@ -76,32 +76,40 @@ namespace D1Equities.GUI.ViewModel
             }
         }
 
-        public async Task InitializeAsync()
+        public void InitializeAsync()
         {
             var sim = App.Simulator;
-
-            await sim.UnloadAllStocks();
+            var positionSymbols = _user.Portfolio.Positions.Keys.ToArray();
 
             foreach(var pos in _user.Portfolio!.Positions.Values)
             {
-                await sim.LoadStock(pos.Ticker);
-
                 if (sim.IsStockLoaded(pos.Ticker))
                 {
                     var stock = sim.GetLoadedStock(pos.Ticker);
 
-                    stock.CandleUpdated += Stock_CandleUpdated;
-                }
+                    WeakEventManager<Stock, CandleUpdatedEventArgs>
+                        .AddHandler(stock, nameof(stock.CandleUpdated), OnCandleUpdated);
 
+                    WeakEventManager<Stock, NewCandleEventArgs>
+                        .AddHandler(stock, nameof(stock.NewCandle), OnNewCandle);
+                }
             }
         }
 
-        private void Stock_CandleUpdated(object? sender, CandleUpdatedEventArgs e)
+        private void OnCandleUpdated(object? sender, CandleUpdatedEventArgs e)
         {
-            if(_user.Portfolio!.Positions.TryGetValue(e.Candle.Symbol, out var pos))
-            {
-                pos.CurrentPrice = e.Candle.Close;
-            }
+            UpdatePortfolio(e.Candle.Symbol, e.Candle.Close);
+        }
+
+        private void OnNewCandle(object? sender, NewCandleEventArgs e)
+        {
+            UpdatePortfolio(e.Candle.Symbol, e.Candle.Close);
+        }
+
+        private void UpdatePortfolio(string symbol, decimal close)
+        {
+            if (_user.Portfolio!.Positions.TryGetValue(symbol, out var pos))
+                pos.CurrentPrice = close;
 
             TotalEquity = _user.Portfolio.TotalEquity;
             TotalValueChange = _user.Portfolio.GetTotalPortfolioValueChange();

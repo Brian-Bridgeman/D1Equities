@@ -27,11 +27,11 @@ namespace D1Equities.GUI.View
             Loaded += HomeView_Loaded;
         }
 
-        private async void HomeView_Loaded(object sender, RoutedEventArgs e)
+        private void HomeView_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataContext is HomeViewModel vm)
             {
-                await vm.InitializeAsync();
+                vm.InitializeAsync();
             }
         }
     }
