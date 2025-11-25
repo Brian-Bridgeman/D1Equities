@@ -5,13 +5,13 @@ namespace D1Equities.Sim
     public class MostActiveStockResponse
     {
         [JsonPropertyName("most_actives")]
-        public List<MostActiveStock> MostActives { get; set; }
+        public List<MostActiveStock> MostActives { get; set; } = new();
     }
 
     public class MostActiveStock
     {
         [JsonPropertyName("symbol")]
-        public string Symbol { get; set; }
+        public string Symbol { get; set; } = string.Empty;
 
         [JsonPropertyName("volume")]
         public long Volume { get; set; }
