@@ -14,7 +14,7 @@ namespace D1Equities.Sim
 
         [JsonIgnore]
         private string? PortfolioPath { get; set; }
-        public decimal GetTotalPositionsValue() => Positions.Values.Select(p => p.CurentValue).Sum();
+        public decimal GetTotalPositionsValue() => Positions.Values.Select(p => p.CurrentValue).Sum();
         public decimal GetTotalPortfolioValueChange() => TotalEquity - EquityHistory.First().Equity;
 
         public static Portfolio Load(string userId)
