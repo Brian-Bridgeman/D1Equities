@@ -14,7 +14,7 @@ namespace D1Equities.GUI.ViewModel
     public class MarketViewModel : ViewModelBase
     {
         private double _currentPrice;
-        private CancellationTokenSource _searchCts;
+        private readonly CancellationTokenSource? _searchCts;
         private System.Timers.Timer _debounceTimer;
         private int _searchVersion = 0;
 
