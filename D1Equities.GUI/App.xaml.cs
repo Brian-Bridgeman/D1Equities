@@ -45,7 +45,7 @@ namespace D1Equities.GUI
                     if (loginView.IsVisible == false && loginView.IsLoaded)
                     {
                         loginView.IsVisibleChanged -= handler; // Unsubscribe properly
-                        var user = (UserModel)Application.Current.Properties["User"];
+                        var user = Application.Current.Properties["User"] as UserModel;
                         var mainVM = new MainViewModel(user);
                         var mainView = new MainView(mainVM);
                         mainView.Show();
