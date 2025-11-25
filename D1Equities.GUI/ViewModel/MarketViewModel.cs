@@ -41,7 +41,7 @@ namespace D1Equities.GUI.ViewModel
         private string? _searchText;
         public string SearchText
         {
-            get => _searchText;
+            get => _searchText ?? string.Empty;
             set
             {
                 _searchText = value;
