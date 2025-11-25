@@ -10,7 +10,7 @@ namespace D1Equities.Sim
 {
     public class MarketSimulator : IDisposable
     {
-        public enum WebSocketErrorCode
+        private enum WebSocketErrorCode
         {
             InvalidSyntax = 400,
             NotAuthenticated = 401,
