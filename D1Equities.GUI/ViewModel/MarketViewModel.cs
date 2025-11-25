@@ -67,8 +67,10 @@ namespace D1Equities.GUI.ViewModel
         public void InitializeAsync()
         {
             var sim = App.Simulator;
+            if(sim == null)
+                return;
 
-            if(sim.MarketMovers != null)
+            if (sim.MarketMovers != null)
             {
                 foreach(var mover in sim.MarketMovers.Gainers)
                 {
