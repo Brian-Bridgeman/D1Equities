@@ -5,12 +5,13 @@
              xmlns:viewModel="clr-namespace:D1Equities.GUI.ViewModel"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              xmlns:local="clr-namespace:D1Equities.GUI.View"
+             xmlns:localConverters="clr-namespace:D1Equities.GUI.Converter"
              Background="Transparent"
              MinHeight="500"
              MinWidth="900">
 
 
-    
+
     <!-- Gradient border -->
     <Border CornerRadius="15" Padding="2">
         <Border.Background>
@@ -61,12 +62,32 @@
                             <!-- Price -->
                             <TextBlock Text="{Binding CurrentPrice}" Foreground="White" FontSize="35" FontWeight="Light" VerticalAlignment="Center"/>
                             <!-- Price Difference -->
-                            <TextBlock Text="{Binding PriceDifference}" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="10,0,0,25" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PriceDifference}" Foreground="{Binding PriceDifference, Converter={StaticResource PercentToColorConverter}}" FontSize="15" FontWeight="Light" Margin="10,0,0,25" VerticalAlignment="Center"/>
                             <!-- Percent Change -->
-                            <TextBlock Text="(" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="5,0,0,25" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding PercentChange}" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="0,0,0,25" VerticalAlignment="Center"/>
-                            <TextBlock Text="%" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="0,0,0,25" VerticalAlignment="Center"/>
-                            <TextBlock Text=")" Foreground="{StaticResource D1Green}" FontSize="15" FontWeight="Light" Margin="0,0,0,25" VerticalAlignment="Center"/>
+                            <TextBlock Text="(" 
+                                       Foreground="{Binding PercentChange, Converter={StaticResource PercentToColorConverter}}"
+                                       FontSize="15"
+                                       FontWeight="Light"
+                                       Margin="5,0,0,25"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PercentChange}"
+                                       Foreground="{Binding PercentChange, Converter={StaticResource PercentToColorConverter}}"
+                                       FontSize="15"
+                                       FontWeight="Light"
+                                       Margin="0,0,0,25"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="%" 
+                                       Foreground="{Binding PercentChange, Converter={StaticResource PercentToColorConverter}}"
+                                       FontSize="15"
+                                       FontWeight="Light"
+                                       Margin="0,0,0,25"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text=")" 
+                                       Foreground="{Binding PercentChange, Converter={StaticResource PercentToColorConverter}}"
+                                       FontSize="15"
+                                       FontWeight="Light"
+                                       Margin="0,0,0,25"
+                                       VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

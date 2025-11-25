@@ -167,14 +167,13 @@
                                             </StackPanel>
 
                                             <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0,0,20,0">
-                                                <TextBlock Text="+$" Foreground="{StaticResource D1Green}"/>
-                                                <TextBlock Text="{Binding Change}" Foreground="{StaticResource D1Green}"/>
+                                                <TextBlock Text="$" Foreground="{Binding Change, Converter={StaticResource PercentToColorConverter}}"/>
+                                                <TextBlock Text="{Binding Change}" Foreground="{Binding Change, Converter={StaticResource PercentToColorConverter}}"/>
                                             </StackPanel>
 
                                             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
-                                                <TextBlock Text="+" Foreground="{StaticResource D1Green}"/>
-                                                <TextBlock Text="{Binding PercentChange}" Foreground="{StaticResource D1Green}"/>
-                                                <TextBlock Text="%" Foreground="{StaticResource D1Green}"/>
+                                                <TextBlock Text="{Binding PercentChange}" Foreground="{Binding PercentChange, Converter={StaticResource PercentToColorConverter}}"/>
+                                                <TextBlock Text="%" Foreground="{Binding PercentChange, Converter={StaticResource PercentToColorConverter}}"/>
                                             </StackPanel>
 
                                         </Grid>

@@ -314,5 +314,6 @@ namespace D1Equities.GUI.ViewModel
         }
 
 
+
     }
 }
