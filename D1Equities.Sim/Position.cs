@@ -64,9 +64,9 @@ namespace D1Equities.Sim
         [JsonIgnore]
         public decimal TotalCost => _shares * _averageEntryPrice;
         [JsonIgnore]
-        public decimal CurentValue => _shares * _currentPrice;
+        public decimal CurrentValue => _shares * _currentPrice;
         [JsonIgnore]
-        public decimal ProfitLoss => CurentValue - TotalCost;
+        public decimal ProfitLoss => CurrentValue - TotalCost;
         [JsonIgnore]
         public decimal ProfitLossPercent 
         {
