@@ -46,7 +46,7 @@ namespace D1Equities.GUI
                     {
                         loginView.IsVisibleChanged -= handler; // Unsubscribe properly
                         var user = Application.Current.Properties["User"] as UserModel;
-                        var mainVM = new MainViewModel(user);
+                        var mainVM = new MainViewModel(user!);
                         var mainView = new MainView(mainVM);
                         mainView.Show();
                         loginView.Close();
