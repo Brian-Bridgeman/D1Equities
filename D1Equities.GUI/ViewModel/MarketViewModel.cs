@@ -15,7 +15,7 @@ namespace D1Equities.GUI.ViewModel
     {
         private double _currentPrice;
         private readonly CancellationTokenSource? _searchCts;
-        private System.Timers.Timer _debounceTimer;
+        private readonly System.Timers.Timer? _debounceTimer;
         private int _searchVersion = 0;
 
         public double CurrentPrice
