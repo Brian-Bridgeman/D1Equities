@@ -27,9 +27,9 @@ namespace D1Equities.Sim
 
         private readonly HttpClient _httpClient;
 
-        private readonly string _apiKeyId = Environment.GetEnvironmentVariable("APCA_API_KEY_ID");
+        private readonly string? _apiKeyId = Environment.GetEnvironmentVariable("APCA_API_KEY_ID");
 
-        private readonly string _apiKeySecret = Environment.GetEnvironmentVariable(
+        private readonly string? _apiKeySecret = Environment.GetEnvironmentVariable(
             "APCA_API_SECRET_KEY"
         );
 
@@ -37,9 +37,9 @@ namespace D1Equities.Sim
 
         public string ChartTimeFrame { get; set; } = "1Min";
 
-        private WebsocketClient _webSocketClient { get; set; }
+        private WebsocketClient? _webSocketClient;
 
-        public Dictionary<string, Ticker> AvailableSymbols { get; private set; } = [];
+        public Dictionary<string, Ticker> AvailableSymbols { get; private set; } = new Dictionary<string, Ticker>();
 
         public Stock? SelectedStock { get; set; }
 
@@ -189,7 +189,7 @@ namespace D1Equities.Sim
                 }
             );
 
-            _webSocketClient.Send(unsubscribeMsg);
+            _webSocketClient?.Send(unsubscribeMsg);
         }
 
         public bool IsStockLoaded(string symbol) => _loadedStocks.ContainsKey(symbol);
@@ -295,7 +295,7 @@ namespace D1Equities.Sim
                 }
             );
 
-            _webSocketClient.Send(subscribeMsg);
+            _webSocketClient?.Send(subscribeMsg);
         }
 
         private void HandleWebSocketMessage(string json)
@@ -317,11 +317,12 @@ namespace D1Equities.Sim
 
                     case "b":
                         var candle = JsonSerializer.Deserialize<CandleStick>(item);
+                        if (candle != null) continue;
                         HandleBarMessage(candle);
                         break;
 
                     case "error":
-                        var msg = item.GetProperty("msg").GetString();
+                        var msg = item.GetProperty("msg").GetString() ?? string.Empty;
                         var code = item.GetProperty("code").GetInt32();
 
                         HandleWebSocketError(code, msg);
@@ -340,7 +341,7 @@ namespace D1Equities.Sim
                     );
 
                 case WebSocketErrorCode.NotAuthenticated:
-                    AuthenticateWebsocket(_webSocketClient);
+                   if (_webSocketClient != null) AuthenticateWebsocket(_webSocketClient);
                     break;
 
                 case WebSocketErrorCode.AuthFailed:
@@ -394,22 +395,26 @@ namespace D1Equities.Sim
 
         private void HandleBarMessage(CandleStick? candleStick)
         {
+            if (candleStick == null)
+                return;
             if (!_loadedStocks.TryGetValue(candleStick.Symbol, out var stock))
                 return;
                 //throw new Exception("Received websocket message on stock that isnt loaded");
 
-            stock.PriceHistory.Add(stock.CurrentCandle);
+            stock.PriceHistory.Add(stock.CurrentCandle!);
             stock.CurrentCandle = candleStick;
             stock.OnNewCandle(candleStick);
         }
 
         private void HandleTradeMessage(Trade? trade)
         {
+            if (trade == null)
+                return;
             if (!_loadedStocks.TryGetValue(trade.Symbol, out var stock))
                 return;
                 //throw new Exception("Received websocket message on stock that isnt loaded");
 
-            var candle = stock.CurrentCandle;
+            var candle = stock.CurrentCandle!;
 
             candle.High = Math.Max(candle.High, trade.Price);
             candle.Low = Math.Min(candle.Low, trade.Price);
@@ -420,7 +425,7 @@ namespace D1Equities.Sim
 
         public void Dispose()
         {
-            _webSocketClient.Dispose();
+            _webSocketClient?.Dispose();
             _httpClient.Dispose();
         }
     }
