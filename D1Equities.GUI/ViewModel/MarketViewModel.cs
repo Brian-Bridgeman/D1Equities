@@ -92,6 +92,7 @@ namespace D1Equities.GUI.ViewModel
         public async void FilterResults()
         {
             var sim = App.Simulator;
+            if(sim == null) return;
             string query = SearchText;
 
             var results = await Task.Run(() =>
