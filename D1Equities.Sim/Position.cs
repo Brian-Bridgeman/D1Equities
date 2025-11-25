@@ -10,7 +10,7 @@ namespace D1Equities.Sim
     public class Position  
     {
 
-        private string _ticker;
+        private string _ticker = string.Empty;
         private int _shares;
         private decimal _averageEntryPrice;
         private decimal _currentPrice;
