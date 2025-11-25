@@ -10,7 +10,7 @@ namespace D1Equities.Sim
     public class Position  
     {
 
-        private string _ticker;
+        private string _ticker = string.Empty;
         private int _shares;
         private decimal _averageEntryPrice;
         private decimal _currentPrice;
@@ -64,9 +64,9 @@ namespace D1Equities.Sim
         [JsonIgnore]
         public decimal TotalCost => _shares * _averageEntryPrice;
         [JsonIgnore]
-        public decimal CurentValue => _shares * _currentPrice;
+        public decimal CurrentValue => _shares * _currentPrice;
         [JsonIgnore]
-        public decimal ProfitLoss => CurentValue - TotalCost;
+        public decimal ProfitLoss => CurrentValue - TotalCost;
         [JsonIgnore]
         public decimal ProfitLossPercent 
         {
