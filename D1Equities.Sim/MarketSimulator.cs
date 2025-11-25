@@ -10,6 +10,21 @@ namespace D1Equities.Sim
 {
     public class MarketSimulator : IDisposable
     {
+        public enum WebSocketErrorCode
+        {
+            InvalidSyntax = 400,
+            NotAuthenticated = 401,
+            AuthFailed = 402,
+            AlreadyAuthenticated = 403,
+            AuthTimeout = 404,
+            SymbolLimitExceeded = 405,
+            ConnectionLimitExceeded = 406,
+            SlowClient = 407,
+            InsufficientSubscription = 409,
+            InvalidSubscribeAction = 410,
+            InternalError = 500
+        }
+
         private readonly HttpClient _httpClient;
 
         private readonly string _apiKeyId = Environment.GetEnvironmentVariable("APCA_API_KEY_ID");
@@ -44,18 +59,16 @@ namespace D1Equities.Sim
 
         public async Task InitAsync()
         {
-            // Run tasks in parallel for maximum speed
-            var wsTask = InitWebsocketClient();
+            _webSocketClient = await InitWebsocketClient();
+
             var activeTask = GetMostActiveStocks();
             var moversTask = GetMarketMovers();
             var symbolsTask = LoadAllUsSymbolsAsync();
 
-            await Task.WhenAll(wsTask, activeTask, moversTask, symbolsTask);
+            await Task.WhenAll(activeTask, moversTask, symbolsTask);
 
-            _webSocketClient = wsTask.Result;
             MostActiveStocks = activeTask.Result;
             MarketMovers = moversTask.Result;
-
         }
 
         public async Task LoadAllUsSymbolsAsync()
@@ -293,30 +306,91 @@ namespace D1Equities.Sim
 
             foreach (var item in messages)
             {
-                switch (item.GetProperty("T").GetString())
+                var type = item.GetProperty("T").GetString();
+
+                switch (type)
                 {
                     case "t":
                         var trade = JsonSerializer.Deserialize<Trade>(item);
                         HandleTradeMessage(trade);
                         break;
-                    case "b":
-                        var candleStick = JsonSerializer.Deserialize<CandleStick>(item);
-                        HandleBarMessage(candleStick);
-                        break;
-                    case "error":
-                        var msg = item.GetProperty("msg").ToString();
-                        var msgCode = int.Parse(item.GetProperty("code").ToString());
 
-                        if (msg.Contains("auth") && msgCode == 401)
-                        {
-                            AuthenticateWebsocket(_webSocketClient);
-                            break;
-                        }
-                            
-                        throw new Exception($"Error received from websocket: {msg}");
+                    case "b":
+                        var candle = JsonSerializer.Deserialize<CandleStick>(item);
+                        HandleBarMessage(candle);
+                        break;
+
+                    case "error":
+                        var msg = item.GetProperty("msg").GetString();
+                        var code = item.GetProperty("code").GetInt32();
+
+                        HandleWebSocketError(code, msg);
+                        break;
                 }
             }
         }
+
+        private void HandleWebSocketError(int code, string msg)
+        {
+            switch ((WebSocketErrorCode)code)
+            {
+                case WebSocketErrorCode.InvalidSyntax:
+                    throw new Exception(
+                        $"{code} {msg} - The message you sent to the server did not follow the specification. This can also be sent if the symbol in your subscription message is in invalid format."
+                    );
+
+                case WebSocketErrorCode.NotAuthenticated:
+                    AuthenticateWebsocket(_webSocketClient);
+                    break;
+
+                case WebSocketErrorCode.AuthFailed:
+                    throw new Exception(
+                        $"{code} {msg} - You have provided invalid authentication credentials."
+                    );
+
+                case WebSocketErrorCode.AlreadyAuthenticated:
+                    return;
+
+                case WebSocketErrorCode.AuthTimeout:
+                    throw new Exception(
+                        $"{code} {msg} - You failed to successfully authenticate after connecting. You only have a few seconds to authenticate after connecting."
+                    );
+
+                case WebSocketErrorCode.SymbolLimitExceeded:
+                    throw new Exception(
+                        $"{code} {msg} - The symbol subscription request you sent would put you over the limit set by your subscription package. If this happens your symbol subscriptions are the same as they were before you sent the request that failed."
+                    );
+
+                case WebSocketErrorCode.ConnectionLimitExceeded:
+                    throw new Exception(
+                        $"{code} {msg} - You already have the number of sessions allowed by your subscription."
+                    );
+
+                case WebSocketErrorCode.SlowClient:
+                    throw new Exception(
+                        $"{code} {msg} - You may receive this if you are too slow to process the messages sent by the server. This is not guaranteed to arrive before you are disconnected to avoid keeping slow connections active forever."
+                    );
+
+                case WebSocketErrorCode.InsufficientSubscription:
+                    throw new Exception(
+                        $"{code} {msg} - You have attempted to access a data source not available in your subscription package."
+                    );
+
+                case WebSocketErrorCode.InvalidSubscribeAction:
+                    throw new Exception(
+                        $"{code} {msg} - You tried to subscribe to channels not available in the stream, for example to bars in the option stream or to trades in the news stream."
+                    );
+
+                case WebSocketErrorCode.InternalError:
+                    throw new Exception(
+                        $"{code} {msg} - An unexpected error occurred on our end. Please let us know if this happens."
+                    );
+
+                default:
+                    throw new Exception($"{code} {msg} - Unknown websocket error.");
+            }
+        }
+
 
         private void HandleBarMessage(CandleStick? candleStick)
         {
