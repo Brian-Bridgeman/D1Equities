@@ -156,7 +156,9 @@ namespace D1Equities.GUI.ViewModel
                 await sim.LoadStocks([ticker]);
 
             if (!sim.IsStockLoaded(ticker))
-                throw new Exception("couldnt load stock in stock view");
+            {
+                return;
+            }
 
             var stock = sim.GetLoadedStock(ticker);
 
