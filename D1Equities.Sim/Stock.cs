@@ -16,12 +16,12 @@
 
         public CandleStick? CurrentCandle { get; set; } = null;
 
-        public double GetCurrentPrice() => (double)CurrentCandle.Close;
+        public double GetCurrentPrice() => (double)(CurrentCandle?.Close ?? 0m);
 
         public double GetTodaysOpeningPrice()
         {
             var tradingDay = PriceHistory.Last().DateTime.Date;
-            return (double)PriceHistory.Where(c => c.DateTime.Date == tradingDay).First().Open;
+            return (double)(PriceHistory.Where(c => c.DateTime.Date == tradingDay).FirstOrDefault()?.Open ?? 0m);
         }
 
         public Stock(string symbol)
