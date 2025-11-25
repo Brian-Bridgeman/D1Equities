@@ -111,7 +111,10 @@ namespace D1Equities.GUI.ViewModel
                 }
 
                 var userPositionSymbols = user.Portfolio.Positions.Keys.ToArray();
-                await App.Simulator.LoadStocks(userPositionSymbols);
+
+                if(userPositionSymbols.Length > 0)
+                    await App.Simulator.LoadStocks(userPositionSymbols);
+
                 Application.Current.Properties["User"] = user;
                 IsViewVisible = false;
             }
