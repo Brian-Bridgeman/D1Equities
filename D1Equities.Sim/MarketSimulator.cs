@@ -419,6 +419,7 @@ namespace D1Equities.Sim
             candle.High = Math.Max(candle.High, trade.Price);
             candle.Low = Math.Min(candle.Low, trade.Price);
             candle.Close = trade.Price;
+            candle.Symbol = trade.Symbol;
 
             stock.OnCandleUpdated(candle);
         }
