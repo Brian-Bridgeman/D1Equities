@@ -9,12 +9,23 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using static D1Equities.GUI.ViewModel.StockViewModel;
 
 namespace D1Equities.GUI.ViewModel
 {
     public class StockViewModel : ViewModelBase
     {
+        private Brush _priceFlashColor = Brushes.Transparent;
+        public Brush PriceFlashColor
+        {
+            get => _priceFlashColor;
+            set
+            {
+                _priceFlashColor = value;
+                OnPropertyChanged();
+            }
+        }
 
         private decimal _currentPrice;
         private CandleStickSeries _candleSeries;
@@ -24,8 +35,20 @@ namespace D1Equities.GUI.ViewModel
             get => _currentPrice;
             set
             {
-                _currentPrice = value;
-                OnPropertyChanged(nameof(CurrentPrice));
+                if (_currentPrice != value)
+                {
+                    var old = _currentPrice;
+                    _currentPrice = value;
+                    OnPropertyChanged();
+
+                    if (old != 0)
+                    {
+                        if (value > old)
+                           _ = FlashPriceColor(true);    
+                        else if (value < old)
+                           _ = FlashPriceColor(false);      
+                    }
+                }
             }
         }
         private double _openPrice;
@@ -96,7 +119,23 @@ namespace D1Equities.GUI.ViewModel
             StockDetails.Add(new StockDetail { Label = "Low", Value = "173.54" });
             StockDetails.Add(new StockDetail { Label = "Volume", Value = "51.2M" });
         }
+        private async Task FlashPriceColor(bool wentUp)
+        {
+            // SET FLASH COLOR (must be on UI thread)
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                PriceFlashColor = new SolidColorBrush(wentUp ? Colors.Green : Colors.Red);
 
+            });
+
+            await Task.Delay(100);
+
+            // RESET (must also be on UI thread)
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                PriceFlashColor = Brushes.Transparent;
+            });
+        }
         public async Task InitializeAsync(string ticker)
         {
             // Create a fresh PlotModel for this stock

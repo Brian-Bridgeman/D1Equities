@@ -60,7 +60,12 @@
                             <!-- Dollar sign -->
                             <TextBlock Text="$" Foreground="White" FontSize="35" FontWeight="Light" VerticalAlignment="Center"/>
                             <!-- Price -->
-                            <TextBlock Text="{Binding CurrentPrice}" Foreground="White" FontSize="35" FontWeight="Light" VerticalAlignment="Center"/>
+                            <Border Background="{Binding PriceFlashColor}" CornerRadius="3">
+                                <TextBlock Text="{Binding CurrentPrice}"
+                                           Foreground="White"
+                                           FontSize="35"
+                                           Padding="2" />
+                            </Border>
                             <!-- Price Difference -->
                             <TextBlock Text="{Binding PriceDifference}" Foreground="{Binding PriceDifference, Converter={StaticResource PercentToColorConverter}}" FontSize="15" FontWeight="Light" Margin="10,0,0,25" VerticalAlignment="Center"/>
                             <!-- Percent Change -->
