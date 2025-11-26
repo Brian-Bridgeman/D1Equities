@@ -16,7 +16,7 @@ namespace D1Equities.GUI.ViewModel
 {
     public class StockViewModel : ViewModelBase
     {
-        private Brush _priceFlashColor = Brushes.Transparent;
+        private Brush _priceFlashColor = Brushes.White;
         public Brush PriceFlashColor
         {
             get => _priceFlashColor;
@@ -124,7 +124,7 @@ namespace D1Equities.GUI.ViewModel
             // SET FLASH COLOR (must be on UI thread)
             Application.Current.Dispatcher.Invoke(() =>
             {
-                PriceFlashColor = new SolidColorBrush(wentUp ? Colors.Green : Colors.Red);
+                PriceFlashColor = new SolidColorBrush(wentUp ? Color.FromRgb(0,137,93) : Colors.Red);
 
             });
 
@@ -133,7 +133,7 @@ namespace D1Equities.GUI.ViewModel
             // RESET (must also be on UI thread)
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                PriceFlashColor = Brushes.Transparent;
+                PriceFlashColor = Brushes.White;
             });
         }
         public async Task InitializeAsync(string ticker)
