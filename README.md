@@ -21,7 +21,7 @@ För att programmet ska kunna fungera så finns det några krav:
 
 - .NET 8.0 eller senare.
 - Windows som operativsystem
-- .env med API credentials i samma mapp som den kompilerade .exe. Utan denna fungerar inte programmet.
+- .env med API credentials i samma mapp som den kompilerade .exe.
 
 ## Installation
 
