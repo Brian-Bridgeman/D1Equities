@@ -128,7 +128,7 @@ namespace D1Equities.GUI.ViewModel
 
             });
 
-            await Task.Delay(100);
+            await Task.Delay(300);
 
             // RESET (must also be on UI thread)
             await Application.Current.Dispatcher.InvokeAsync(() =>
