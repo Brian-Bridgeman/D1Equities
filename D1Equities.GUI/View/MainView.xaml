@@ -77,8 +77,7 @@
                     <!--Menu Buttons-->
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="LightGray"
-                                 Command="{Binding ShowHomeViewCommand}"
-                                 IsChecked="true">
+                                 Command="{Binding ShowHomeViewCommand}">
                                 
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Home" Style="{StaticResource menuButtonIcon}"/>
@@ -101,16 +100,6 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="ChartLine" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Market" Style="{StaticResource menuButtonText}"/>
-                        </StackPanel>
-                    </RadioButton>
-
-
-                    <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="LightGray"
-                                 Margin="0,250,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:IconImage Icon="ArrowRightFromBracket" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Log out" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
 

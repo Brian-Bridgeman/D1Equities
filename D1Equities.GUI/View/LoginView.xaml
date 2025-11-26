@@ -269,27 +269,7 @@
                             </Button.Template>
                         </Button>
 
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Center"
-                                    Margin="0,15,0,0">
-                            <TextBlock Text="Don't have an account?"
-                            Foreground="DarkGray"
-                            FontSize="12"
-                            FontWeight="Medium"
-                            FontFamily="Arial"
-                            TextWrapping="Wrap"
-                            TextAlignment="Center"/>
 
-                            <TextBlock Text="Sign up."
-                            Foreground="White"
-                            FontSize="12"
-                            FontWeight="Medium"
-                            FontFamily="Arial"
-                            Cursor="Hand"
-                            TextWrapping="Wrap"
-                            TextAlignment="Center"
-                            Margin="8,0,0,0"/>
-                        </StackPanel>
 
                     </StackPanel>
 
