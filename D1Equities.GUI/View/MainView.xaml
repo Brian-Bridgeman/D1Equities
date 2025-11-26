@@ -77,7 +77,8 @@
                     <!--Menu Buttons-->
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="LightGray"
-                                 Command="{Binding ShowHomeViewCommand}">
+                                 Command="{Binding ShowHomeViewCommand}"
+                                 IsChecked="True">
                                 
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Home" Style="{StaticResource menuButtonIcon}"/>
