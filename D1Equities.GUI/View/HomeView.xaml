@@ -51,10 +51,38 @@
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                        <TextBlock Text="$" Foreground="White" FontSize="25"
-                       FontWeight="Light" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding TotalEquity}" Foreground="White" FontSize="30"
-                       FontWeight="Light" VerticalAlignment="Center"/>
+                        <TextBlock Text="$"
+               Foreground="White"
+               FontSize="25"
+               FontWeight="Light"
+               VerticalAlignment="Center"/>
+
+                        <TextBlock Text="{Binding TotalEquity}"
+               Foreground="White"
+               FontSize="30"
+               FontWeight="Light"
+               VerticalAlignment="Center"
+               Margin="5,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- NEW BALANCE LINE -->
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Balance: "
+               Foreground="#a1a1a1"
+               FontSize="16"
+               FontWeight="Light"
+               VerticalAlignment="Center"/>
+
+                        <TextBlock Text="$ "
+               Foreground="White"
+               FontSize="18"
+               FontWeight="Light"
+               VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Balance}"
+               Foreground="White"
+               FontSize="18"
+               FontWeight="Light"
+               VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -78,9 +106,16 @@
                                    FontSize="30" FontWeight="Light" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                        <TextBlock Text="{Binding TotalPercentageChange}" 
-                                   Foreground="{Binding TotalPercentageChange, Converter={StaticResource PercentToColorConverter}}" 
-                                   FontSize="20" FontWeight="Light" VerticalAlignment="Center"/>
+
+                        <TextBlock Text="{Binding TotalPercentageChange}"
+                           Foreground="{Binding TotalPercentageChange, Converter={StaticResource PercentToColorConverter}}"
+                           FontSize="20" FontWeight="Light" VerticalAlignment="Center"/>
+
+                        <TextBlock Text="%" 
+                           Foreground="{Binding TotalPercentageChange, Converter={StaticResource PercentToColorConverter}}"
+                           FontSize="20" FontWeight="Light" VerticalAlignment="Center"
+                           Margin="2,0,0,0"/>
+
                     </StackPanel>
 
                 </StackPanel>                
@@ -109,7 +144,92 @@
                 </StackPanel>
             </Border>
 
-            <!-- BOTTOM rectangle -->
+            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+        Margin="12" CornerRadius="10" BorderThickness="1" BorderBrush="#292929">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#191919" Offset="0"/>
+                        <GradientStop Color="#121212" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <DataGrid ItemsSource="{Binding History}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="Column"
+              Background="Transparent"
+              BorderThickness="0"
+              Foreground="#e0e0e0"
+              FontSize="16"
+              RowHeight="36"
+              ColumnHeaderHeight="42"
+              GridLinesVisibility="None"
+              CanUserAddRows="False"
+              SelectionMode="Single"
+              SelectionUnit="FullRow"
+              IsReadOnly="true"
+                >
+
+
+                    <!-- === CELL STYLE (3-space indent) === -->
+                    <DataGrid.Resources>
+                        <Style x:Key="CellPaddingStyle" TargetType="TextBlock">
+                            <Setter Property="Padding" Value="12,0,0,0"/>
+                            <!-- 3-space indent -->
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <!-- === HEADER STYLE === -->
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Foreground" Value="#bdbdbd"/>
+                            <Setter Property="Background" Value="#1c1c1c"/>
+                            <Setter Property="FontSize" Value="15"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="#292929"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            <Setter Property="Padding" Value="12,0,0,0"/>
+                            <!-- Match cell indent -->
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
+                    <!-- === ROW STYLE === -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="#181818"/>
+                            <!-- normal -->
+                            <Setter Property="BorderBrush" Value="#232323"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="Padding" Value="4"/>
+                            <Setter Property="Foreground" Value="#e0e0e0"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                    <!-- === COLUMNS (Correct Order + Padding) === -->
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Action" Binding="{Binding Action}"
+                                Width="*" ElementStyle="{StaticResource CellPaddingStyle}" />
+
+                        <DataGridTextColumn Header="Symbol" Binding="{Binding Symbol}"
+                                Width="*" ElementStyle="{StaticResource CellPaddingStyle}" />
+
+                        <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}"
+                                Width="*" ElementStyle="{StaticResource CellPaddingStyle}" />
+
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price}"
+                                Width="*" ElementStyle="{StaticResource CellPaddingStyle}" />
+
+                        <DataGridTextColumn Header="Total" Binding="{Binding Total}"
+                                Width="*" ElementStyle="{StaticResource CellPaddingStyle}" />
+
+                        <DataGridTextColumn Header="Time" Binding="{Binding Time}"
+                                Width="2*" ElementStyle="{StaticResource CellPaddingStyle}" />
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
 
 
         </Grid>

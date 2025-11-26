@@ -72,8 +72,8 @@ namespace D1Equities.GUI.ViewModel
         {
             Ticker = p.Ticker;
             Shares = p.Shares;
-            AveragePrice = p.AveragePrice;
-            CurrentPrice = p.CurrentPrice;
+            AveragePrice = Math.Round(p.AveragePrice, 2);
+            CurrentPrice = Math.Round(p.CurrentPrice, 2);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

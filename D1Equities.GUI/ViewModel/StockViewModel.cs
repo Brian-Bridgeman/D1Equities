@@ -264,7 +264,7 @@ namespace D1Equities.GUI.ViewModel
         {
             var currentPrice = _candleSeries.Items.Last().Close;
             var openPrice = _candleSeries.Items.First().Open;
-            CurrentPrice = (decimal)currentPrice;
+            CurrentPrice = Math.Round((decimal)currentPrice, 2);
             PriceDifference = Math.Round((currentPrice - openPrice),2);
             PercentChange = Math.Round(((currentPrice - openPrice) / openPrice) * 100, 2);
         }
@@ -314,23 +314,7 @@ namespace D1Equities.GUI.ViewModel
                 }
                 else
                 {
-                    // Sell shares properly
-                    if (!user.Portfolio.Positions.TryGetValue(Ticker, out var pos))
-                        throw new Exception($"No shares owned for {Ticker}");
-
-                    if (amount > pos.Shares)
-                        throw new Exception("Cannot sell more shares than you own");
-
-                    // Remove shares and update balance
-                    pos.RemoveShares(amount);
-                    user.Portfolio.Balance += amount * price;
-
-                    // Remove from portfolio if zero shares left
-                    if (pos.Shares == 0)
-                        user.Portfolio.Positions.Remove(Ticker);
-
-                    // Track equity history
-                    user.Portfolio.EquityHistory.Add(new EquityHistory(DateTime.Now, user.Portfolio.TotalEquity));
+                    user.Portfolio.SellShares(Ticker, price, amount);
                 }
 
                 user.Portfolio.Save();

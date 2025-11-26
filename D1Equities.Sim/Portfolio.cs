@@ -11,11 +11,13 @@ namespace D1Equities.Sim
         public decimal TotalEquity => Balance + GetTotalPositionsValue();
         public Dictionary<string, Position> Positions { get; set; } = [];
         public List<EquityHistory> EquityHistory { get; set; } = [];
+        public List<BuySellHistory> BuySellHistory { get; set; } = [];
 
         [JsonIgnore]
         private string? PortfolioPath { get; set; }
         public decimal GetTotalPositionsValue() => Positions.Values.Select(p => p.CurrentValue).Sum();
         public decimal GetTotalPortfolioValueChange() => TotalEquity - EquityHistory.First().Equity;
+        public decimal GetTotalPortfolioPercentageChange() => (TotalEquity / EquityHistory.First().Equity - 1) * 100;
 
         public static Portfolio Load(string userId)
         {
@@ -93,7 +95,7 @@ namespace D1Equities.Sim
             }
 
             EquityHistory.Add(new EquityHistory(DateTime.Now, TotalEquity));
-
+            BuySellHistory.Add(new BuySellHistory(symbol, MarketAction.Buy, quantity, price));
         }
 
 
@@ -116,7 +118,7 @@ namespace D1Equities.Sim
                 Positions.Remove(symbol);
 
             EquityHistory.Add(new EquityHistory(DateTime.Now, TotalEquity));
+            BuySellHistory.Add(new BuySellHistory(symbol, MarketAction.Sell, quantity, price));
         }
-
     }
 }
