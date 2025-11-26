@@ -59,7 +59,7 @@
                     <TextBlock Grid.Column="1" Text="Shares" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
                     <TextBlock Grid.Column="2" Text="Avg Price" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
                     <TextBlock Grid.Column="3" Text="Current" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
-                    <TextBlock Grid.Column="4" Text="P/L %" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Grid.Column="4" Text="P/L $" Foreground="Gray" FontSize="16" FontWeight="Bold"/>
                 </Grid>
 
                 <!-- Scroll list -->
