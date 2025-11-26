@@ -19,14 +19,22 @@ kan du logga in med ditt egna konto och börja handla med ett kontosaldo på $10
 
 För att programmet ska kunna fungera så finns det några krav:
 
-**Vi skickar .env filen som behövs för att komma igång i programmet, den måste in i D1Equities.GUI mappen**
 - .NET 8.0 eller senare.
+- Windows som operativsystem
+- .env med API credentials i samma mapp som den kompilerade .exe. Utan denna fungerar inte programmet.
 
 ## Installation
-### Kompilera
-```bash
-git clone https://github.com/EduEdugrade/net25-kurs-1-grupparbete-d1.git
-```
+
+1. Kör nedan kommando i Windows Terminalen / CMD:
+   ```bash
+   git clone https://github.com/EduEdugrade/net25-kurs-1-grupparbete-d1.git && cd net25-kurs-1-grupparbete-d1\D1Equities.GUI && dotnet build && explorer bin\Debug\net8.0-windows
+   ```
+
+2. Lägg .env filen i mappen som öppnas
+
+3. Kör `D1Equities.GUI.exe`
+
+
 ## Användning
 
 `Login:` När du startar programmet kommer du se en login view där användarnamn och lösenord krävs. Som standard är det "a"
