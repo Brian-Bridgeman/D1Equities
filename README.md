@@ -1,66 +1,163 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/TyBvFPPq)
-# .net25-oop-group
-Grupparbete för första kursen
+<div align="center">
 
-### OBS! 
+<img src="docs/screenshots/logo-dark.png" width="300" alt="D1 Equities-logotyp">
 
-Hej Oscar, vi skulle vilja meddela att eftersom programmet funkar i samband med Amerikanska börsen, så skulle vi 
-uppskatta om du kunde köra programmet efter klockan 15:30 och innan klockan 22:00 annars kommer den vara väldigt 
-tråkig att använda.
+# D1 Equities
 
-### D1 Equities
+### *Invest from Day One.*
 
-Känner du att du vill kunna handla aktier utan risken att tappa dina livsbesparingar? Eller till och med kunna
-öva på din investeringsstrategi innan du börjar handla på riktigt? Det är precis därför vi har skapat D1 equities,
-ett program som låter dig handla fritt på den riktiga Amerikanska marknaden med låtsas pengar. När programmet körs 
-kan du logga in med ditt egna konto och börja handla med ett kontosaldo på $10,000 så fort marknaden är öppen. 
+En modern desktop-app för aktiehandel där du handlar på den **riktiga amerikanska börsen i realtid** – men med låtsaspengar. Öva din investeringsstrategi helt utan risk.
 
-### Krav för att komma igång
+![C#](https://img.shields.io/badge/C%23-.NET%208-512BD4?logo=dotnet&logoColor=white)
+![WPF](https://img.shields.io/badge/UI-WPF-0078D6?logo=windows&logoColor=white)
+![MVVM](https://img.shields.io/badge/Arkitektur-MVVM-2ea44f)
+![Alpaca](https://img.shields.io/badge/Marknadsdata-Alpaca%20API-ffd43b)
+![OxyPlot](https://img.shields.io/badge/Grafer-OxyPlot-1f77b4)
+![Realtid](https://img.shields.io/badge/WebSocket-Realtid-00895d)
 
-För att programmet ska kunna fungera så finns det några krav:
+<img src="docs/screenshots/home.png" width="880" alt="D1 Equities – översiktsvy">
 
-- .NET 8.0 eller senare.
-- Windows som operativsystem
-- .env med API credentials i samma mapp som den kompilerade .exe.
+</div>
 
-## Installation
+---
 
-1. Kör nedan kommando i Windows Terminalen / CMD:
+## 💡 Om projektet
+
+**D1 Equities** är en aktiehandelssimulator byggd i **C# / .NET 8** med **WPF**. Programmet kopplar upp sig mot
+den verkliga amerikanska aktiemarknaden via [Alpaca Markets API](https://alpaca.markets/) och låter dig handla bland
+**över 7 000 aktier** med riktiga, löpande priser – men med ett fiktivt startkapital på **$10 000**.
+
+Tanken är enkel: *du ska kunna lära dig handla aktier och testa strategier utan att riskera en enda krona.* Du loggar
+in med ett eget konto, följer kursrörelser i realtid med candlestick-grafer, köper och säljer, och ser hur din portfölj
+utvecklas över tid – precis som i en riktig handelsplattform.
+
+> **Bra att veta:** Eftersom appen visar data från den amerikanska börsen är den som mest levande när marknaden är öppen,
+> dvs. vardagar ca **15:30–22:00 svensk tid**.
+
+---
+
+## ✨ Funktioner
+
+### 🔐 Inloggning
+Säker inloggning med eget användarkonto. Varje användare har en egen portfölj som sparas mellan sessioner.
+
+<div align="center">
+<img src="docs/screenshots/login.png" width="300" alt="Inloggningsvy">
+</div>
+
+### 🏠 Home – Din portfölj i ett ögonkast
+Startvyn ger en tydlig översikt: **totalt portföljvärde**, tillgängligt **saldo**, total **vinst/förlust** i både dollar
+och procent samt antalet olika aktier du äger. Längst ner finns en komplett **transaktionshistorik** över alla köp och sälj.
+
+<div align="center">
+<img src="docs/screenshots/home.png" width="880" alt="Home-vy">
+</div>
+
+### 📈 Market – Utforska marknaden
+Sök bland **över 7 000 amerikanska aktier** på ticker eller företagsnamn. I sidopanelerna visas de **10 största
+vinnarna** ("Market Movers") och de **10 mest omsatta aktierna** ("Most Active") det senaste dygnet – uppdaterat med
+färsk marknadsdata.
+
+<div align="center">
+<img src="docs/screenshots/market.png" width="880" alt="Market-vy">
+</div>
+
+### 🕯️ Stock – Realtidskurser & candlestick-grafer
+När du väljer en aktie ser du **aktuellt pris i realtid**, dagens förändring samt en interaktiv **candlestick-graf**
+som ritas upp live via en WebSocket-ström. En infopanel visar nyckeltal som Market Cap, P/E-tal, utdelning, volym och
+dagens öppning/lägsta.
+
+<div align="center">
+<img src="docs/screenshots/stock.png" width="880" alt="Stock-vy med candlestick-graf">
+</div>
+
+### 💵 Köp & sälj
+Handelsdialogen räknar automatiskt ut totalkostnad och visar ditt saldo **före och efter** affären, så att du alltid
+har full koll innan du bekräftar.
+
+<div align="center">
+<img src="docs/screenshots/trade.png" width="280" alt="Köp-dialog">
+</div>
+
+### 💼 Portfolio – Dina innehav
+En tydlig tabell över alla aktier du äger: antal, **genomsnittligt inköpspris (GAV)**, aktiens nuvarande pris och din
+**vinst/förlust per innehav** i dollar.
+
+<div align="center">
+<img src="docs/screenshots/portfolio.png" width="880" alt="Portfolio-vy">
+</div>
+
+---
+
+## 🛠️ Teknik & arkitektur
+
+| Område | Teknik |
+| --- | --- |
+| **Språk & runtime** | C# 12, .NET 8 |
+| **Gränssnitt** | WPF (XAML), custom-stylade kontroller, mörkt tema |
+| **Arkitektur** | MVVM (Model–View–ViewModel) med commands & databinding |
+| **Marknadsdata** | Alpaca Markets – REST (historik, screeners) + **WebSocket** (realtidspriser) |
+| **Grafer** | OxyPlot (candlestick-diagram) |
+| **Datahantering** | `System.Text.Json` för portföljer/användare, CsvHelper, JSON-baserad persistens |
+| **Ikoner** | FontAwesome.Sharp |
+
+**Tekniska höjdpunkter:**
+
+- 🔄 **Realtidsdata via WebSocket** – kurser och grafer uppdateras löpande utan att appen behöver fråga om data.
+- 🧱 **Renodlad MVVM-arkitektur** – tydlig separation mellan vyer, vy-modeller och affärslogik, vilket gör koden lätt att underhålla och testa.
+- 🧩 **Två-projektslösning** – `D1Equities.Sim` (marknads- & portföljlogik) är frikopplat från `D1Equities.GUI` (presentationslagret).
+- ⚡ **Asynkron datahämtning** – över 7 000 aktiesymboler och marknadsdata laddas parallellt med `async/await` för snabb uppstart.
+- 🔐 **Säker hantering av API-nycklar** via miljövariabler (`.env`), som aldrig checkas in i versionshanteringen.
+
+---
+
+## 🚀 Kom igång
+
+### Krav
+- **.NET 8 SDK** eller senare
+- **Windows** (WPF-applikation)
+- API-nycklar från [Alpaca Markets](https://alpaca.markets/) (ett gratiskonto räcker)
+
+### Installation
+
+1. Klona repot och bygg projektet:
    ```bash
-   git clone https://github.com/EduEdugrade/net25-kurs-1-grupparbete-d1.git && cd net25-kurs-1-grupparbete-d1\D1Equities.GUI && dotnet build && explorer bin\Debug\net8.0-windows
+   git clone https://github.com/Brian-Bridgeman/D1Equities.git
+   cd D1Equities/D1Equities.GUI
+   dotnet build
    ```
 
-2. Lägg .env filen i mappen som öppnas
+2. Skapa en fil med namnet **`.env`** i mappen `D1Equities.GUI` med dina Alpaca-nycklar:
+   ```env
+   APCA_API_KEY_ID=din_nyckel_id
+   APCA_API_SECRET_KEY=din_hemliga_nyckel
+   ```
 
-3. Kör `D1Equities.GUI.exe`
+3. Starta appen:
+   ```bash
+   dotnet run
+   ```
+   Logga in med standardkontot (användarnamn `a`, lösenord `a`) – konton kan redigeras i `users.json`.
 
+> 💡 Kör appen under den amerikanska börsens öppettider (ca 15:30–22:00 svensk tid) för att se priser och grafer röra sig live.
 
-## Användning
+---
 
-`Login:` När du startar programmet kommer du se en login view där användarnamn och lösenord krävs. Som standard är det "a"
-på båda fält och när du trycker på login knappen hamnar du i programmet. Användarnamnet och lösenordet går att ändra
-på i "users.json" filen i repo mappen.
+## 📁 Projektstruktur
 
-`Home:` När du är inloggad hamnar du inne på home view där du kan se den totala värdet på din portfölj samt din balans. Till
-höger på det hittar du hur mycket du har gått upp eller ner på ditt konto, både i $ och %. Längst åt höger ser du hur 
-många olika aktier du äger och på den nedre sektion hittar du en historik på alla dina köp och sälj. 
+```
+D1Equities/
+├── D1Equities.GUI/      # WPF-app: vyer, vy-modeller, stilar (presentationslager)
+│   ├── View/            # XAML-vyer (Login, Home, Market, Stock, Portfolio …)
+│   ├── ViewModel/       # MVVM-vy-modeller
+│   └── Model/           # Användarmodell & repositories
+└── D1Equities.Sim/      # Affärslogik: marknadssimulator, portfölj, positioner, API-anrop
+```
 
-`Portfolio:` Nästa view är portfolio view, den visar alla aktier du äger samt information som ticker namn, antal du äger, 
-medelpriset du har handlat varje aktie för, aktiens nuvarande pris och din profit/loss i $ för varje aktie du har handlat.
+---
 
-`Market:` Här kan du köpa dina aktier. Åt vänster hittar en lista på över 7000 olika aktier, du kan söka efter en specifik aktie
-genom att skriva ticker eller företagsnamnet i sök fältet och sedan trycka på den du vill köpa för att komma till stock view. Åt höger 
-hittar du en lista på dom 10 mest framgångsrika aktier dom senaste 24 timmar samt information om hur mycket dom har gått upp, bredvid 
-den listan hittar du en lista på dom 10 mest aktiva stock dom senaste 24 timmar.
+<div align="center">
 
-`Stocks:` När du har valt en aktie du vill handla kommer du att hamna på stock view. Här hittar du det aktuella priset i realtid, hur 
-mycket den har gått upp sedan marknaden öppnade och en candlestick graph som visar aktiens prisutveckling i realtid. Du hittar en "Buy"
-och "Sell" knapp längre ner, trycker du på buy så kommer du kunna välja hur många aktier av just den företag du vill köpa. Du kan se din 
-nuvarande balans och din balans efter köp samt hur många aktier du redan äger. Trycker du på sälj knappen är det i princip samma sak fast
-du kan nu sälja dina aktier istället. När du köper en aktie så hamnar den i din portfolio, notera att du kan även komma till stock view 
-från portfolio view om du trycker på en aktie i listan. 
+*D1 Equities byggdes som ett grupparbete under första kursen i en .NET-utbildning.*
 
-Nu har du all informationen du behöver för att komma igång och blir till nästa Warren Buffett, lycka till!
-
-
-
+</div>
